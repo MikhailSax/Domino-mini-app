@@ -55,18 +55,6 @@ function ProductCard({ item, onOpen }) {
             {item.title}
           </div>
 
-          <div className="mt-2 flex flex-wrap gap-2">
-          <span className="text-[11px] rounded-full bg-gray-100 px-3 py-1">
-            Конфигуратор
-          </span>
-            <span className="text-[11px] rounded-full bg-gray-100 px-3 py-1">
-            Макет
-          </span>
-            <span className="text-[11px] rounded-full bg-gray-100 px-3 py-1">
-            Проверка
-          </span>
-          </div>
-
           <div className="mt-3 flex items-center justify-between">
             <div className="text-xs text-gray-500">Открыть</div>
             <div className="text-gray-400">›</div>
