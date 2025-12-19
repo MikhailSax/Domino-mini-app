@@ -5,8 +5,8 @@ import { formatRUB } from "../app/ui.js";
 
 function PlaceholderImage({ title }) {
   return (
-      <div className="relative w-full aspect-[16/10] rounded-3xl overflow-hidden border border-white/60 bg-gradient-to-br from-indigo-50 via-white to-amber-50 shadow-[0_20px_50px_rgba(15,23,42,0.08)]">
-        <div className="absolute inset-0 opacity-60 bg-[radial-gradient(circle_at_20%_20%,rgba(99,102,241,0.18),transparent_55%),radial-gradient(circle_at_80%_30%,rgba(236,72,153,0.16),transparent_50%)]" />
+      <div className="relative w-full aspect-[16/10] rounded-3xl overflow-hidden border border-white/60 bg-gradient-to-br from-rose-50 via-white to-amber-50 shadow-[0_20px_50px_rgba(15,23,42,0.08)]">
+        <div className="absolute inset-0 opacity-60 bg-[radial-gradient(circle_at_20%_20%,rgba(244,63,94,0.15),transparent_55%),radial-gradient(circle_at_80%_30%,rgba(251,146,60,0.14),transparent_50%)]" />
         <div className="absolute inset-0 grid place-items-center">
           <div className="text-center">
             <div className="text-4xl">🖨️</div>
@@ -97,7 +97,7 @@ export default function ProductPage({ slug, onBack, onGoCart }) {
       <div className="max-w-md mx-auto p-4 pb-[260px]">
         <div className="flex items-center justify-between">
           <button
-              className="text-sm text-indigo-700 px-3 py-2 rounded-2xl bg-white/70 border border-white/80 shadow-sm active:scale-[0.99]"
+              className="text-sm text-rose-700 px-3 py-2 rounded-2xl bg-white/70 border border-white/80 shadow-sm active:scale-[0.99]"
               onClick={() => onBack?.()}
           >
             ← Каталог
@@ -150,14 +150,14 @@ export default function ProductPage({ slug, onBack, onGoCart }) {
                     <div className="text-xs text-gray-500 mb-1">Тираж</div>
                     <div className="flex items-center gap-2">
                       <button
-                          className="w-11 h-11 rounded-2xl bg-indigo-50 text-indigo-700 active:scale-[0.99] transition"
+                          className="w-11 h-11 rounded-2xl bg-rose-50 text-rose-700 active:scale-[0.99] transition"
                           onClick={() => setQty((q) => Math.max(100, q - 100))}
                       >
                         −
                       </button>
 
                       <input
-                          className="w-full rounded-2xl border border-indigo-100 px-4 py-3 text-sm bg-white/90"
+                          className="w-full rounded-2xl border border-rose-100 px-4 py-3 text-sm bg-white/90"
                           value={qty}
                           onChange={(e) => setQty(Number(e.target.value || 0))}
                           type="number"
@@ -165,7 +165,7 @@ export default function ProductPage({ slug, onBack, onGoCart }) {
                       />
 
                       <button
-                          className="w-11 h-11 rounded-2xl bg-indigo-50 text-indigo-700 active:scale-[0.99] transition"
+                          className="w-11 h-11 rounded-2xl bg-rose-50 text-rose-700 active:scale-[0.99] transition"
                           onClick={() => setQty((q) => q + 100)}
                       >
                         +
@@ -177,7 +177,7 @@ export default function ProductPage({ slug, onBack, onGoCart }) {
                     <div>
                       <div className="text-xs text-gray-500 mb-1">Материал</div>
                       <select
-                          className="w-full rounded-2xl border border-indigo-100 px-3 py-3 text-sm bg-white/90"
+                          className="w-full rounded-2xl border border-rose-100 px-3 py-3 text-sm bg-white/90"
                           value={material}
                           onChange={(e) => setMaterial(e.target.value)}
                       >
@@ -190,7 +190,7 @@ export default function ProductPage({ slug, onBack, onGoCart }) {
                     <div>
                       <div className="text-xs text-gray-500 mb-1">Срок</div>
                       <select
-                          className="w-full rounded-2xl border border-indigo-100 px-3 py-3 text-sm bg-white/90"
+                          className="w-full rounded-2xl border border-rose-100 px-3 py-3 text-sm bg-white/90"
                           value={term}
                           onChange={(e) => setTerm(e.target.value)}
                       >
@@ -210,9 +210,9 @@ export default function ProductPage({ slug, onBack, onGoCart }) {
             {/* TAB: UPLOAD */}
             {tab === "upload" && (
                 <div className="mt-4">
-                  <div className="rounded-2xl border border-dashed border-indigo-200 bg-indigo-50/60 p-4">
-                    <div className="text-sm font-semibold text-indigo-800">Загрузить макет</div>
-                    <div className="text-xs text-indigo-700/80 mt-1">
+                  <div className="rounded-2xl border border-dashed border-rose-200 bg-rose-50/60 p-4">
+                    <div className="text-sm font-semibold text-rose-800">Загрузить макет</div>
+                    <div className="text-xs text-rose-700/80 mt-1">
                       Пока заглушка. Позже сделаем загрузку в API и хранение файлов.
                     </div>
 
@@ -245,7 +245,7 @@ export default function ProductPage({ slug, onBack, onGoCart }) {
                   ].map((t) => (
                       <div
                           key={t}
-                          className="rounded-2xl bg-indigo-50/70 border border-indigo-100 p-3 text-sm text-indigo-900 flex items-center gap-2"
+                          className="rounded-2xl bg-rose-50/70 border border-rose-100 p-3 text-sm text-rose-900 flex items-center gap-2"
                       >
                         <span>✅</span>
                         <span>{t}</span>
@@ -262,14 +262,14 @@ export default function ProductPage({ slug, onBack, onGoCart }) {
         {/* FLOATING BUY BAR (над нижней навигацией) */}
         <div className="fixed left-0 right-0 z-50" style={{ bottom: "var(--bottom-nav-h)" }}>
           <div className="max-w-md mx-auto px-4">
-            <div className="rounded-3xl bg-gradient-to-br from-indigo-600 via-purple-600 to-slate-900 text-white backdrop-blur shadow-xl p-4 border border-white/30">
+            <div className="rounded-3xl bg-gradient-to-br from-rose-600 via-orange-600 to-amber-700 text-white backdrop-blur shadow-xl p-4 border border-white/30">
               <div className="flex items-center justify-between px-1 mb-3">
                 <div className="text-xs text-white/80">Итого</div>
                 <div className="text-lg font-semibold">{formatRUB(price)}</div>
               </div>
 
               <button
-                  className="w-full rounded-2xl bg-white text-indigo-700 py-3.5 text-sm font-semibold active:scale-[0.99] transition shadow-lg shadow-indigo-900/20"
+                  className="w-full rounded-2xl bg-white text-rose-700 py-3.5 text-sm font-semibold active:scale-[0.99] transition shadow-lg shadow-rose-900/10"
                   onClick={() => {
                     addItem({
                       slug,

@@ -9,9 +9,9 @@
 
 body {
   @apply antialiased text-slate-900;
-  background: radial-gradient(circle at 20% 20%, #fef3c7 0, rgba(255, 255, 255, 0) 35%),
-    radial-gradient(circle at 80% 0%, #c7d2fe 0, rgba(255, 255, 255, 0) 32%),
-    linear-gradient(180deg, #f9fafb 0%, #eef2ff 45%, #fdf2f8 100%);
+  background: radial-gradient(circle at 20% 20%, #ffe4e6 0, rgba(255, 255, 255, 0) 35%),
+    radial-gradient(circle at 80% 0%, #fed7aa 0, rgba(255, 255, 255, 0) 32%),
+    linear-gradient(180deg, #fff7ed 0%, #fff1f2 45%, #fff5f5 100%);
   min-height: 100vh;
 }
 
