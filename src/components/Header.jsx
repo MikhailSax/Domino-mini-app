@@ -1,8 +1,6 @@
 import React from "react";
 
-const quickSuggestions = ["Визитки", "Баннер 3×6", "Каталог", "Печать этикеток"];
-
-export default function Header({ query, setQuery, cartCount = 0, onCartClick }) {
+export default function Header({ cartCount = 0, onCartClick }) {
   return (
     <div className="sticky top-0 z-50 bg-gradient-to-b from-white/80 via-white/70 to-transparent backdrop-blur-xl">
       <div className="max-w-md mx-auto px-4 pt-4 pb-3">
@@ -19,10 +17,6 @@ export default function Header({ query, setQuery, cartCount = 0, onCartClick }) 
             </div>
 
             <div className="flex items-center gap-2">
-              <div className="hidden sm:flex items-center gap-1 text-[11px] px-2 py-1 rounded-full bg-rose-50 text-rose-700 border border-rose-100">
-                <span className="text-xs">⭐</span>
-                <span>Премиум сервис</span>
-              </div>
               <button
                 className="relative rounded-2xl bg-gradient-to-br from-rose-600 to-amber-600 px-4 py-2 text-sm text-white shadow-md active:scale-[0.99] transition"
                 onClick={onCartClick}
@@ -35,44 +29,6 @@ export default function Header({ query, setQuery, cartCount = 0, onCartClick }) 
                   </span>
                 )}
               </button>
-            </div>
-          </div>
-
-          <div className="mt-3">
-            <div className="flex items-center gap-2 rounded-2xl bg-white/90 px-3 py-3 shadow-inner border border-white/80">
-              <span className="text-rose-500">🔎</span>
-              <input
-                className="w-full bg-transparent text-sm outline-none"
-                placeholder="Поиск: визитки, баннер 12×4…"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-              />
-              {query && (
-                <button
-                  className="text-xs text-rose-600 px-2 py-1 rounded-xl hover:bg-rose-50"
-                  onClick={() => setQuery("")}
-                >
-                  Сброс
-                </button>
-              )}
-            </div>
-            <div className="mt-2 flex flex-wrap gap-2 text-[12px] text-slate-600">
-              {quickSuggestions.map((item) => (
-                <button
-                  key={item}
-                  type="button"
-                  className="px-3 py-1 rounded-full border border-white/80 bg-white/90 shadow-sm hover:border-rose-100 active:scale-[0.99] transition"
-                  onClick={() => setQuery(item)}
-                >
-                  {item}
-                </button>
-              ))}
-              <span className="px-3 py-1 rounded-full bg-rose-50 text-rose-700 border border-rose-100">Популярные запросы</span>
-            </div>
-            <div className="mt-2 flex flex-wrap gap-2 text-[11px] text-slate-500">
-              <span className="px-2 py-1 rounded-full bg-amber-100 text-amber-700 border border-amber-200">Сроки от 1 дня</span>
-              <span className="px-2 py-1 rounded-full bg-rose-50 text-rose-700 border border-rose-100">Свежие макеты</span>
-              <span className="px-2 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200">Доставка по городу</span>
             </div>
           </div>
         </div>
