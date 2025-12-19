@@ -7,7 +7,7 @@ export default function Header({ query, setQuery, cartCount = 0, onCartClick }) 
         <div className="glass-card p-3 shadow-lg">
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white grid place-items-center font-semibold shadow-md">
+              <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-rose-500 to-orange-500 text-white grid place-items-center font-semibold shadow-md">
                 D
               </div>
               <div>
@@ -17,12 +17,12 @@ export default function Header({ query, setQuery, cartCount = 0, onCartClick }) 
             </div>
 
             <div className="flex items-center gap-2">
-              <div className="hidden sm:flex items-center gap-1 text-[11px] px-2 py-1 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-100">
+              <div className="hidden sm:flex items-center gap-1 text-[11px] px-2 py-1 rounded-full bg-rose-50 text-rose-700 border border-rose-100">
                 <span className="text-xs">⭐</span>
                 <span>Премиум сервис</span>
               </div>
               <button
-                className="relative rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 px-4 py-2 text-sm text-white shadow-md active:scale-[0.99] transition"
+                className="relative rounded-2xl bg-gradient-to-br from-rose-600 to-amber-600 px-4 py-2 text-sm text-white shadow-md active:scale-[0.99] transition"
                 onClick={onCartClick}
                 aria-label="Корзина"
               >
@@ -38,7 +38,7 @@ export default function Header({ query, setQuery, cartCount = 0, onCartClick }) 
 
           <div className="mt-3">
             <div className="flex items-center gap-2 rounded-2xl bg-white/90 px-3 py-3 shadow-inner border border-white/80">
-              <span className="text-indigo-500">🔎</span>
+              <span className="text-rose-500">🔎</span>
               <input
                 className="w-full bg-transparent text-sm outline-none"
                 placeholder="Поиск: визитки, баннер 12×4…"
@@ -47,7 +47,7 @@ export default function Header({ query, setQuery, cartCount = 0, onCartClick }) 
               />
               {query && (
                 <button
-                  className="text-xs text-indigo-600 px-2 py-1 rounded-xl hover:bg-indigo-50"
+                  className="text-xs text-rose-600 px-2 py-1 rounded-xl hover:bg-rose-50"
                   onClick={() => setQuery("")}
                 >
                   Сброс
@@ -56,7 +56,7 @@ export default function Header({ query, setQuery, cartCount = 0, onCartClick }) 
             </div>
             <div className="mt-2 flex flex-wrap gap-2 text-[11px] text-slate-500">
               <span className="px-2 py-1 rounded-full bg-amber-100 text-amber-700 border border-amber-200">Сроки от 1 дня</span>
-              <span className="px-2 py-1 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-100">Свежие макеты</span>
+              <span className="px-2 py-1 rounded-full bg-rose-50 text-rose-700 border border-rose-100">Свежие макеты</span>
               <span className="px-2 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200">Доставка по городу</span>
             </div>
           </div>

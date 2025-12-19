@@ -6,8 +6,8 @@ export default function Navigation({ active = "home", onNav }) {
       className={
         "flex-1 py-2 rounded-2xl active:scale-[0.99] transition bg-white/60 backdrop-blur border " +
         (active === id
-          ? "border-indigo-200 text-indigo-700 shadow-[0_10px_30px_rgba(99,102,241,0.25)]"
-          : "border-white/70 text-slate-500 hover:border-indigo-100")
+          ? "border-rose-200 text-rose-700 shadow-[0_10px_30px_rgba(244,63,94,0.25)]"
+          : "border-white/70 text-slate-500 hover:border-rose-100")
       }
       onClick={() => (onNav ? onNav(id) : alert(`Раздел: ${title}`))}
     >
