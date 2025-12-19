@@ -70,7 +70,6 @@ export default function CatalogPage({ onOpenProduct }) {
   const [items, setItems] = useState([]);
   const [loadingCats, setLoadingCats] = useState(true);
   const [loadingItems, setLoadingItems] = useState(true);
-  const [query, setQuery] = useState("");
 
   useEffect(() => {
     let ok = true;
@@ -105,11 +104,7 @@ export default function CatalogPage({ onOpenProduct }) {
     };
   }, [active]);
 
-  const filtered = useMemo(() => {
-    const s = (query || "").trim().toLowerCase();
-    if (!s) return items;
-    return items.filter((x) => x.title.toLowerCase().includes(s));
-  }, [items, query]);
+  const filtered = useMemo(() => items, [items]);
 
   const title = cats.find((c) => c.id === active)?.title || "Каталог";
 
@@ -120,7 +115,6 @@ export default function CatalogPage({ onOpenProduct }) {
             activeId={active}
             onChange={(id) => {
               setActive(id);
-              setQuery("");
             }}
         />
 
@@ -134,60 +128,6 @@ export default function CatalogPage({ onOpenProduct }) {
             <div className="text-sm text-white/80 mt-2">
               Выбирай товар, настраивай детали, добавляй в корзину — без лишних кликов.
             </div>
-          </div>
-        </div>
-
-        <div className="mt-4">
-          <div className="glass-card p-3 shadow-lg border border-white/80 relative">
-            <div className="flex items-center gap-2 rounded-2xl bg-white/90 px-3 py-3 shadow-inner border border-white/80">
-              <span className="text-rose-500">🔎</span>
-              <input
-                  className="w-full bg-transparent text-sm outline-none"
-                  placeholder="Поиск в каталоге"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-              />
-              {query && (
-                  <button
-                      className="text-xs text-rose-600 px-2 py-1 rounded-xl hover:bg-rose-50"
-                      onClick={() => setQuery("")}
-                  >
-                    Сброс
-                  </button>
-              )}
-            </div>
-
-            <div className="mt-2 flex flex-wrap gap-2 text-[12px] text-slate-600">
-              {["Визитки", "Баннер 3×6", "Каталог", "Печать этикеток"].map((item) => (
-                  <button
-                      key={item}
-                      type="button"
-                      className="px-3 py-1 rounded-full border border-white/80 bg-white/90 shadow-sm hover:border-rose-100 active:scale-[0.99] transition"
-                      onClick={() => setQuery(item)}
-                  >
-                    {item}
-                  </button>
-              ))}
-              <span className="px-3 py-1 rounded-full bg-rose-50 text-rose-700 border border-rose-100">Поиск по товарам</span>
-            </div>
-
-            {query && (
-                <div className="absolute inset-x-3 mt-3 rounded-2xl bg-white shadow-xl border border-rose-50 max-h-64 overflow-y-auto z-10">
-                  {filtered.length === 0 && (
-                      <div className="px-4 py-3 text-sm text-slate-600">Нет результатов</div>
-                  )}
-                  {filtered.slice(0, 6).map((item) => (
-                      <button
-                          key={item.slug}
-                          className="w-full text-left px-4 py-3 text-sm hover:bg-rose-50 flex items-center justify-between gap-2"
-                          onClick={() => onOpenProduct?.(item.slug)}
-                      >
-                        <span className="font-medium text-slate-800">{item.title}</span>
-                        <span className="text-[11px] text-rose-500">Открыть ↗</span>
-                      </button>
-                  ))}
-                </div>
-            )}
           </div>
         </div>
 
