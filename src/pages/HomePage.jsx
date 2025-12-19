@@ -44,6 +44,51 @@ function ProductRow({ item, onClick }) {
   );
 }
 
+function ServiceChecklist({ onNeedHelp }) {
+  const items = [
+    "Менеджер подключится и проверит макет перед печатью",
+    "Уточним доставку: самовывоз, курьер или выдача в пункте",
+    "Дадим прогноз срока и сразу покажем стоимость",
+  ];
+
+  return (
+    <div className="mt-4 rounded-3xl bg-white/90 border border-white/80 shadow-[0_18px_45px_rgba(15,23,42,0.08)] p-4">
+      <div className="flex items-start gap-3">
+        <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-500 text-white grid place-items-center shadow-md">
+          🤝
+        </div>
+        <div className="flex-1">
+          <div className="text-sm font-semibold">Поможем собрать заказ без ошибок</div>
+          <div className="mt-2 space-y-2">
+            {items.map((text) => (
+              <div key={text} className="flex items-start gap-2 text-[13px] text-slate-700 leading-snug">
+                <span className="mt-0.5 text-emerald-500">✔</span>
+                <span>{text}</span>
+              </div>
+            ))}
+          </div>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <button
+              type="button"
+              className="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-sm font-semibold shadow-md active:scale-[0.99] transition"
+              onClick={onNeedHelp}
+            >
+              Нужна помощь с заказом
+            </button>
+            <button
+              type="button"
+              className="px-4 py-2 rounded-xl border border-slate-200 bg-white text-sm font-semibold text-slate-700 shadow-sm active:scale-[0.99] transition"
+              onClick={() => window?.open?.("tel:+73012222333")}
+            >
+              Позвонить: +7 (3012) 222-333
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function HomePage({ query, setQuery, onOpenProduct }) {
   const [topCategories, setTopCategories] = useState([]);
   const [top, setTop] = useState("poligrafiya");
@@ -128,6 +173,8 @@ export default function HomePage({ query, setQuery, onOpenProduct }) {
           </div>
         ))}
       </div>
+
+      <ServiceChecklist onNeedHelp={() => alert("Менеджер свяжется с вами для уточнения деталей.")} />
 
       <div className="mt-4 space-y-2">
         {loading && (

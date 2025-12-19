@@ -1,5 +1,7 @@
 import React from "react";
 
+const quickSuggestions = ["Визитки", "Баннер 3×6", "Каталог", "Печать этикеток"];
+
 export default function Header({ query, setQuery, cartCount = 0, onCartClick }) {
   return (
     <div className="sticky top-0 z-50 bg-gradient-to-b from-white/80 via-white/70 to-transparent backdrop-blur-xl">
@@ -53,6 +55,19 @@ export default function Header({ query, setQuery, cartCount = 0, onCartClick }) 
                   Сброс
                 </button>
               )}
+            </div>
+            <div className="mt-2 flex flex-wrap gap-2 text-[12px] text-slate-600">
+              {quickSuggestions.map((item) => (
+                <button
+                  key={item}
+                  type="button"
+                  className="px-3 py-1 rounded-full border border-white/80 bg-white/90 shadow-sm hover:border-rose-100 active:scale-[0.99] transition"
+                  onClick={() => setQuery(item)}
+                >
+                  {item}
+                </button>
+              ))}
+              <span className="px-3 py-1 rounded-full bg-rose-50 text-rose-700 border border-rose-100">Популярные запросы</span>
             </div>
             <div className="mt-2 flex flex-wrap gap-2 text-[11px] text-slate-500">
               <span className="px-2 py-1 rounded-full bg-amber-100 text-amber-700 border border-amber-200">Сроки от 1 дня</span>
