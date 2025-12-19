@@ -4,20 +4,22 @@ export default function Navigation({ active = "home", onNav }) {
   const Item = ({ id, icon, title }) => (
     <button
       className={
-        "flex-1 py-2 rounded-2xl active:scale-[0.99] transition " +
-        (active === id ? "bg-white shadow-sm border border-gray-100" : "text-gray-500")
+        "flex-1 py-2 rounded-2xl active:scale-[0.99] transition bg-white/60 backdrop-blur border " +
+        (active === id
+          ? "border-indigo-200 text-indigo-700 shadow-[0_10px_30px_rgba(99,102,241,0.25)]"
+          : "border-white/70 text-slate-500 hover:border-indigo-100")
       }
       onClick={() => (onNav ? onNav(id) : alert(`Раздел: ${title}`))}
     >
       <div className="text-lg leading-none">{icon}</div>
-      <div className="text-[11px] mt-1">{title}</div>
+      <div className="text-[11px] mt-1 font-medium">{title}</div>
     </button>
   );
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-40 bg-gray-50/80 backdrop-blur border-t border-gray-100">
-      <div className="max-w-md mx-auto p-3">
-        <div className="grid grid-cols-4 gap-2">
+    <div className="fixed bottom-0 left-0 right-0 z-40 bg-gradient-to-t from-white via-white/80 to-white/50 backdrop-blur-xl border-t border-white/70">
+      <div className="max-w-md mx-auto p-4">
+        <div className="grid grid-cols-4 gap-3">
           <Item id="home" icon="🏠" title="Главная" />
           <Item id="catalog" icon="🗂️" title="Каталог" />
           <Item id="orders" icon="📦" title="Заказы" />
