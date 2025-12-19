@@ -3,14 +3,51 @@ import { api } from "../app/api.js";
 import { useCart } from "../app/CartContext.jsx";
 import { formatRUB } from "../app/ui.js";
 
+function IconPrinter({ className = "w-12 h-12" }) {
+  return (
+      <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.6"
+          className={"text-rose-700 " + className}
+      >
+        <path
+            d="M7 9V4.5A1.5 1.5 0 0 1 8.5 3h7A1.5 1.5 0 0 1 17 4.5V9"
+            strokeLinecap="round"
+        />
+        <rect x="4" y="8" width="16" height="8.5" rx="2" ry="2" />
+        <path d="M7 15h10v5H7z" />
+        <path d="M8.5 12h7" strokeLinecap="round" />
+        <circle cx="17.5" cy="11" r="0.8" fill="currentColor" stroke="none" />
+      </svg>
+  );
+}
+
+function IconCheck({ className = "w-4 h-4" }) {
+  return (
+      <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          className={"text-rose-700 " + className}
+      >
+        <path d="M5.5 12.5 10 17l8.5-9" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+  );
+}
+
 function PlaceholderImage({ title }) {
   return (
-      <div className="relative w-full aspect-[16/10] rounded-3xl overflow-hidden border border-white/60 bg-gradient-to-br from-rose-50 via-white to-amber-50 shadow-[0_20px_50px_rgba(15,23,42,0.08)]">
-        <div className="absolute inset-0 opacity-60 bg-[radial-gradient(circle_at_20%_20%,rgba(244,63,94,0.15),transparent_55%),radial-gradient(circle_at_80%_30%,rgba(251,146,60,0.14),transparent_50%)]" />
+      <div className="relative w-full aspect-[16/10] rounded-3xl overflow-hidden border border-rose-100 bg-gradient-to-br from-rose-50 via-white to-rose-100 shadow-[0_20px_50px_rgba(15,23,42,0.08)]">
+        <div className="absolute inset-0 opacity-60 bg-[radial-gradient(circle_at_20%_20%,rgba(244,63,94,0.18),transparent_55%),radial-gradient(circle_at_80%_30%,rgba(225,29,72,0.14),transparent_50%)]" />
         <div className="absolute inset-0 grid place-items-center">
           <div className="text-center">
-            <div className="text-4xl">🖨️</div>
-            <div className="mt-2 text-xs text-slate-600 px-4">
+            <IconPrinter className="w-14 h-14 mx-auto" />
+            <div className="mt-2 text-xs text-rose-800 px-4">
               Изображение товара
             </div>
           </div>
@@ -119,7 +156,7 @@ export default function ProductPage({ slug, onBack, onGoCart }) {
                 </div>
               </div>
 
-              <div className="text-right">
+              <div className="text-right shrink-0 flex flex-col items-end">
                 <div className="text-xs text-gray-500">от</div>
                 <div className="text-lg font-semibold leading-none">
                   {formatRUB(price)}
@@ -247,7 +284,7 @@ export default function ProductPage({ slug, onBack, onGoCart }) {
                           key={t}
                           className="rounded-2xl bg-rose-50/70 border border-rose-100 p-3 text-sm text-rose-900 flex items-center gap-2"
                       >
-                        <span>✅</span>
+                        <IconCheck />
                         <span>{t}</span>
                       </div>
                   ))}
@@ -262,7 +299,7 @@ export default function ProductPage({ slug, onBack, onGoCart }) {
         {/* FLOATING BUY BAR (над нижней навигацией) */}
         <div className="fixed left-0 right-0 z-50" style={{ bottom: "var(--bottom-nav-h)" }}>
           <div className="max-w-md mx-auto px-4">
-            <div className="rounded-3xl bg-gradient-to-br from-rose-600 via-orange-600 to-amber-700 text-white backdrop-blur shadow-xl p-4 border border-white/30">
+            <div className="rounded-3xl bg-gradient-to-br from-rose-700 via-rose-600 to-red-700 text-white backdrop-blur shadow-xl p-4 border border-white/30">
               <div className="flex items-center justify-between px-1 mb-3">
                 <div className="text-xs text-white/80">Итого</div>
                 <div className="text-lg font-semibold">{formatRUB(price)}</div>

@@ -2,6 +2,44 @@ import React, { useEffect, useMemo, useState } from "react";
 import { api } from "../app/api.js";
 import { formatRUB } from "../app/ui.js";
 
+function IconPrinter({ className = "w-12 h-12" }) {
+  return (
+      <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.6"
+          className={"text-rose-700 " + className}
+      >
+        <path
+            d="M7 9V4.5A1.5 1.5 0 0 1 8.5 3h7A1.5 1.5 0 0 1 17 4.5V9"
+            strokeLinecap="round"
+        />
+        <rect x="4" y="8" width="16" height="8.5" rx="2" ry="2" />
+        <path d="M7 15h10v5H7z" />
+        <path d="M8.5 12h7" strokeLinecap="round" />
+        <circle cx="17.5" cy="11" r="0.8" fill="currentColor" stroke="none" />
+      </svg>
+  );
+}
+
+function IconArrow({ className = "w-4 h-4" }) {
+  return (
+      <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          className={"text-rose-600 " + className}
+      >
+        <path d="M7 17 17 7" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M9 7h8v8" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+  );
+}
+
 function TopTabs({ items, activeId, onChange }) {
   return (
       <div className="mt-3">
@@ -34,19 +72,19 @@ function ProductCard({ item, onOpen }) {
           onClick={onOpen}
           className="text-left rounded-3xl bg-white/90 shadow-[0_20px_50px_rgba(15,23,42,0.08)] border border-white/70 overflow-hidden active:scale-[0.99] transition backdrop-blur"
       >
-        <div className="aspect-[4/3] bg-gradient-to-br from-gray-100 to-gray-200 relative">
-          <div className="absolute inset-0 opacity-60 bg-[radial-gradient(circle_at_20%_20%,rgba(0,0,0,0.08),transparent_55%),radial-gradient(circle_at_80%_30%,rgba(0,0,0,0.06),transparent_50%)]" />
+        <div className="aspect-[4/3] bg-gradient-to-br from-rose-50 via-white to-rose-100 relative">
+          <div className="absolute inset-0 opacity-50 bg-[radial-gradient(circle_at_20%_20%,rgba(244,63,94,0.12),transparent_55%),radial-gradient(circle_at_80%_30%,rgba(244,63,94,0.1),transparent_50%)]" />
           <div className="absolute inset-0 grid place-items-center text-gray-600">
             <div className="text-center">
-              <div className="text-2xl">🖨️</div>
-              <div className="mt-1 text-[11px]">Превью</div>
+              <IconPrinter className="w-11 h-11 mx-auto" />
+              <div className="mt-1 text-[11px] text-rose-700/80">Превью</div>
             </div>
           </div>
 
           <div className="absolute top-3 left-3">
-          <span className="text-[11px] px-2.5 py-1 rounded-full bg-white/90 backdrop-blur border border-white text-gray-700 shadow whitespace-nowrap">
-            от {formatRUB(item.priceFrom ?? 900)}
-          </span>
+            <span className="text-[11px] px-2.5 py-1 rounded-full bg-white/95 backdrop-blur border border-rose-100 text-rose-800 shadow whitespace-nowrap">
+              от {formatRUB(item.priceFrom ?? 900)}
+            </span>
           </div>
         </div>
 
@@ -56,8 +94,8 @@ function ProductCard({ item, onOpen }) {
           </div>
 
           <div className="mt-3 flex items-center justify-between">
-          <div className="text-xs text-rose-600 font-medium">Открыть конфигуратор</div>
-            <div className="text-rose-400">↗</div>
+            <div className="text-xs text-rose-700 font-semibold">Открыть конфигуратор</div>
+            <IconArrow />
           </div>
         </div>
       </button>
