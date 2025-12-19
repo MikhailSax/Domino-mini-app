@@ -15,8 +15,7 @@ import OrdersPage from "./OrdersPage.jsx";
 import ProfilePage from "./ProfilePage.jsx";
 
 function ShellInner() {
-  const [query, setQuery] = useState("");
-  const [route, setRoute] = useState({ name: "home" }); 
+  const [route, setRoute] = useState({ name: "home" });
   // home | catalog | orders | profile | product | cart | checkout
 
   const { items } = useCart();
@@ -30,14 +29,14 @@ function ShellInner() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-rose-50 via-white to-amber-50 text-slate-900">
-      <Header query={query} setQuery={setQuery} cartCount={cartCount} onCartClick={openCart} />
+      <Header cartCount={cartCount} onCartClick={openCart} />
 
       {screen === "home" && (
-        <HomePage query={query} setQuery={setQuery} onOpenProduct={openProduct} />
+        <HomePage onOpenProduct={openProduct} />
       )}
 
       {screen === "catalog" && (
-        <CatalogPage query={query} setQuery={setQuery} onOpenProduct={openProduct} />
+        <CatalogPage onOpenProduct={openProduct} />
       )}
 
       {screen === "product" && (

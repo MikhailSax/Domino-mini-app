@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { api } from "../app/api.js";
 
 function TopTabs({ items, activeId, onChange }) {
@@ -89,7 +89,7 @@ function ServiceChecklist({ onNeedHelp }) {
   );
 }
 
-export default function HomePage({ query, setQuery, onOpenProduct }) {
+export default function HomePage({ onOpenProduct }) {
   const [topCategories, setTopCategories] = useState([]);
   const [top, setTop] = useState("poligrafiya");
   const [items, setItems] = useState([]);
@@ -123,12 +123,6 @@ export default function HomePage({ query, setQuery, onOpenProduct }) {
     return () => { alive = false; };
   }, [top]);
 
-  const filtered = useMemo(() => {
-    const s = (query || "").trim().toLowerCase();
-    if (!s) return items;
-    return items.filter((x) => x.title.toLowerCase().includes(s));
-  }, [items, query]);
-
   const topTitle = topCategories.find((x) => x.id === top)?.title || "Категория";
 
   return (
@@ -136,7 +130,7 @@ export default function HomePage({ query, setQuery, onOpenProduct }) {
       <TopTabs
         items={topCategories.length ? topCategories : [{ id: top, title: topTitle }]}
         activeId={top}
-        onChange={(id) => { setTop(id); setQuery(""); }}
+        onChange={(id) => setTop(id)}
       />
 
         <div className="mt-4 glass-card p-5 bg-gradient-to-br from-rose-600/90 via-orange-500/90 to-amber-500/90 text-white shadow-xl overflow-hidden relative">
@@ -163,17 +157,6 @@ export default function HomePage({ query, setQuery, onOpenProduct }) {
         </div>
       </div>
 
-      <div className="mt-3 grid grid-cols-3 gap-3">
-        {["1 день", "Доставка", "Качество 4K"].map((badge) => (
-          <div
-            key={badge}
-            className="glass-card px-3 py-2 text-center text-[12px] font-semibold text-slate-700 bg-white/80"
-          >
-            {badge}
-          </div>
-        ))}
-      </div>
-
       <ServiceChecklist onNeedHelp={() => alert("Менеджер свяжется с вами для уточнения деталей.")} />
 
       <div className="mt-4 space-y-2">
@@ -183,11 +166,12 @@ export default function HomePage({ query, setQuery, onOpenProduct }) {
           </div>
         )}
 
-        {!loading && filtered.map((it) => (
-          <ProductRow key={it.slug} item={it} onClick={() => onOpenProduct?.(it.slug)} />
-        ))}
+        {!loading &&
+          items.map((it) => (
+            <ProductRow key={it.slug} item={it} onClick={() => onOpenProduct?.(it.slug)} />
+          ))}
 
-        {!loading && filtered.length === 0 && (
+        {!loading && items.length === 0 && (
           <div className="rounded-2xl bg-white p-4 shadow-sm border border-gray-100 text-sm text-gray-600">
             Ничего не найдено.
           </div>
