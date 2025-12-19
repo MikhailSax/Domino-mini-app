@@ -13,10 +13,10 @@ function TopTabs({ items, activeId, onChange }) {
                     key={c.id}
                     onClick={() => onChange(c.id)}
                     className={
-                        "whitespace-nowrap px-4 py-2 rounded-2xl text-sm border active:scale-[0.99] transition " +
+                        "whitespace-nowrap px-4 py-2 rounded-2xl text-sm border active:scale-[0.99] transition shadow-sm " +
                         (active
-                            ? "bg-black text-white border-black"
-                            : "bg-white text-gray-700 border-gray-100 shadow-sm")
+                            ? "bg-gradient-to-r from-indigo-500 to-purple-500 text-white border-transparent shadow-[0_12px_30px_rgba(99,102,241,0.35)]"
+                            : "bg-white/80 text-slate-700 border-white/70 hover:border-indigo-100")
                     }
                 >
                   {c.title}
@@ -32,11 +32,11 @@ function ProductCard({ item, onOpen }) {
   return (
       <button
           onClick={onOpen}
-          className="text-left rounded-3xl bg-white shadow-sm border border-gray-100 overflow-hidden active:scale-[0.99] transition"
+          className="text-left rounded-3xl bg-white/90 shadow-[0_20px_50px_rgba(15,23,42,0.08)] border border-white/70 overflow-hidden active:scale-[0.99] transition backdrop-blur"
       >
         <div className="aspect-[4/3] bg-gradient-to-br from-gray-100 to-gray-200 relative">
           <div className="absolute inset-0 opacity-60 bg-[radial-gradient(circle_at_20%_20%,rgba(0,0,0,0.08),transparent_55%),radial-gradient(circle_at_80%_30%,rgba(0,0,0,0.06),transparent_50%)]" />
-          <div className="absolute inset-0 grid place-items-center text-gray-500">
+          <div className="absolute inset-0 grid place-items-center text-gray-600">
             <div className="text-center">
               <div className="text-2xl">🖨️</div>
               <div className="mt-1 text-[11px]">Превью</div>
@@ -44,7 +44,7 @@ function ProductCard({ item, onOpen }) {
           </div>
 
           <div className="absolute top-3 left-3">
-          <span className="text-[11px] px-2.5 py-1 rounded-full bg-white/80 backdrop-blur border border-white text-gray-700">
+          <span className="text-[11px] px-2.5 py-1 rounded-full bg-white/90 backdrop-blur border border-white text-gray-700 shadow">
             от {formatRUB(item.priceFrom ?? 900)}
           </span>
           </div>
@@ -56,8 +56,8 @@ function ProductCard({ item, onOpen }) {
           </div>
 
           <div className="mt-3 flex items-center justify-between">
-            <div className="text-xs text-gray-500">Открыть</div>
-            <div className="text-gray-400">›</div>
+            <div className="text-xs text-indigo-600 font-medium">Открыть конфигуратор</div>
+            <div className="text-indigo-400">↗</div>
           </div>
         </div>
       </button>
@@ -123,13 +123,16 @@ export default function CatalogPage({ query, setQuery, onOpenProduct }) {
             }}
         />
 
-        <div className="mt-4 rounded-3xl bg-black text-white p-5 shadow-sm">
-          <div className="text-sm opacity-90">{title}</div>
-          <div className="text-2xl font-semibold mt-1 leading-tight">
-            Каталог продукции
-          </div>
-          <div className="text-xs opacity-80 mt-2">
-            Выбирай товар — внутри конфигуратор и корзина.
+        <div className="mt-4 glass-card p-5 bg-gradient-to-br from-indigo-500/90 via-purple-500/90 to-slate-900/90 text-white shadow-xl relative overflow-hidden">
+          <div className="absolute inset-0 opacity-25 bg-[radial-gradient(circle_at_10%_10%,rgba(255,255,255,0.9),transparent_35%),radial-gradient(circle_at_90%_20%,rgba(255,255,255,0.6),transparent_40%)]" />
+          <div className="relative">
+            <div className="text-xs uppercase tracking-wide text-white/80">{title}</div>
+            <div className="text-2xl font-semibold mt-1 leading-tight">
+              Каталог продукции
+            </div>
+            <div className="text-sm text-white/80 mt-2">
+              Выбирай товар, настраивай детали, добавляй в корзину — без лишних кликов.
+            </div>
           </div>
         </div>
 

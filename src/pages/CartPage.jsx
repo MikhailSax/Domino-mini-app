@@ -14,10 +14,10 @@ export default function CartPage({ onBack, onCheckout }) {
         <div className="max-w-md mx-auto px-4 pb-[220px] pt-2">
             <div className="flex items-center justify-between">
                 <button
-                    className="text-sm text-gray-600 px-2 py-1 rounded-xl hover:bg-gray-100"
+                    className="text-sm text-indigo-700 px-3 py-2 rounded-2xl bg-white/70 border border-white/80 shadow-sm active:scale-[0.99]"
                     onClick={onBack}
                 >
-                    ← Назад
+                    ← Каталог
                 </button>
 
                 {items.length > 0 && (
@@ -27,7 +27,7 @@ export default function CartPage({ onBack, onCheckout }) {
                 )}
             </div>
 
-            <div className="mt-3 bg-white rounded-3xl p-4 shadow-sm border border-gray-100">
+            <div className="mt-3 glass-card bg-white/90 p-4">
                 <div className="text-lg font-semibold">Корзина</div>
                 <div className="text-xs text-gray-500 mt-1">
                     {items.length ? `Позиций: ${items.length}` : "Пока пусто"}
@@ -38,7 +38,7 @@ export default function CartPage({ onBack, onCheckout }) {
                 {items.map((it) => (
                     <div
                         key={it._id}
-                        className="bg-white rounded-3xl p-4 shadow-sm border border-gray-100"
+                        className="glass-card bg-white/90 p-4"
                     >
                         <div className="flex items-start justify-between gap-3">
                             <div>

@@ -12,8 +12,10 @@ function TopTabs({ items, activeId, onChange }) {
               key={c.id}
               onClick={() => onChange(c.id)}
               className={
-                "whitespace-nowrap px-4 py-2 rounded-2xl text-sm border active:scale-[0.99] transition " +
-                (active ? "bg-black text-white border-black" : "bg-white text-gray-700 border-gray-100 shadow-sm")
+                "whitespace-nowrap px-4 py-2 rounded-2xl text-sm border active:scale-[0.99] transition shadow-sm " +
+                (active
+                  ? "bg-gradient-to-r from-indigo-500 to-purple-500 text-white border-transparent shadow-[0_12px_30px_rgba(99,102,241,0.35)]"
+                  : "bg-white/80 text-slate-700 border-white/70 hover:border-indigo-100")
               }
             >
               {c.title}
@@ -28,12 +30,15 @@ function TopTabs({ items, activeId, onChange }) {
 function ProductRow({ item, onClick }) {
   return (
     <button
-      className="w-full text-left rounded-2xl bg-white px-4 py-3 shadow-sm border border-gray-100 active:scale-[0.99] transition"
+      className="w-full text-left rounded-3xl bg-white/80 px-4 py-3 shadow-[0_16px_40px_rgba(15,23,42,0.08)] border border-white/70 active:scale-[0.99] transition backdrop-blur"
       onClick={onClick}
     >
       <div className="flex items-center justify-between gap-3">
-        <div className="text-sm font-medium">{item.title}</div>
-        <div className="text-gray-400">›</div>
+        <div>
+          <div className="text-sm font-semibold leading-snug">{item.title}</div>
+          <div className="text-[11px] text-slate-500 mt-1">Конфигуратор • Превью макета</div>
+        </div>
+        <div className="text-indigo-500 text-lg">↗</div>
       </div>
     </button>
   );
@@ -89,25 +94,39 @@ export default function HomePage({ query, setQuery, onOpenProduct }) {
         onChange={(id) => { setTop(id); setQuery(""); }}
       />
 
-      <div className="mt-4 rounded-3xl bg-black text-white p-5 shadow-sm">
-        <div className="text-sm opacity-90">{topTitle}</div>
-        <div className="text-2xl font-semibold mt-1 leading-tight">Выберите продукцию</div>
-        <div className="text-xs opacity-80 mt-2">Дальше откроем конфигуратор и добавим в корзину.</div>
+      <div className="mt-4 glass-card p-5 bg-gradient-to-br from-indigo-600/90 via-purple-600/90 to-amber-500/90 text-white shadow-xl overflow-hidden relative">
+        <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.6),transparent_35%),radial-gradient(circle_at_80%_30%,rgba(255,255,255,0.4),transparent_40%)]" />
+        <div className="relative">
+          <div className="text-xs uppercase tracking-wide text-white/80">{topTitle}</div>
+          <div className="text-2xl font-semibold mt-1 leading-tight">Создай идеальный тираж</div>
+          <div className="text-sm text-white/80 mt-2">Конфигуратор, загрузка макета и проверка в одном клике.</div>
 
-        <div className="mt-4 flex gap-2">
-          <button
-            className="rounded-2xl bg-white text-black px-4 py-2 text-sm font-medium active:scale-[0.99] transition"
-            onClick={() => alert("Позже: промокоды")}
-          >
-            Промокод
-          </button>
-          <button
-            className="rounded-2xl bg-white/10 px-4 py-2 text-sm font-medium active:scale-[0.99] transition"
-            onClick={() => alert("Позже: консультация")}
-          >
-            Консультация
-          </button>
+          <div className="mt-4 grid grid-cols-2 gap-2">
+            <button
+              className="rounded-2xl bg-white text-indigo-600 px-4 py-2 text-sm font-semibold active:scale-[0.99] transition shadow-lg shadow-indigo-900/20"
+              onClick={() => alert("Позже: промокоды")}
+            >
+              Промокод
+            </button>
+            <button
+              className="rounded-2xl bg-white/15 px-4 py-2 text-sm font-semibold active:scale-[0.99] transition border border-white/30"
+              onClick={() => alert("Позже: консультация")}
+            >
+              Консультация
+            </button>
+          </div>
         </div>
+      </div>
+
+      <div className="mt-3 grid grid-cols-3 gap-3">
+        {["1 день", "Доставка", "Качество 4K"].map((badge) => (
+          <div
+            key={badge}
+            className="glass-card px-3 py-2 text-center text-[12px] font-semibold text-slate-700 bg-white/80"
+          >
+            {badge}
+          </div>
+        ))}
       </div>
 
       <div className="mt-4 space-y-2">
