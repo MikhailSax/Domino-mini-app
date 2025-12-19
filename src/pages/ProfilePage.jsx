@@ -6,36 +6,36 @@ export default function ProfilePage() {
 
   return (
     <div className="max-w-md mx-auto px-4 pb-28 pt-2">
-      <div className="mt-3 rounded-3xl bg-black text-white p-5 shadow-sm">
-        <div className="text-sm opacity-90">Профиль</div>
+      <div className="mt-3 rounded-3xl bg-gradient-to-br from-indigo-700 via-blue-700 to-purple-700 text-white p-5 shadow-sm border border-white/20">
+        <div className="text-sm opacity-80">Профиль</div>
         <div className="text-2xl font-semibold mt-1 leading-tight">Данные</div>
-        <div className="text-xs opacity-80 mt-2">Сохраняется локально. Позже подключим REST.</div>
+        <div className="text-xs opacity-70 mt-2">Сохраняется локально. Позже подключим REST.</div>
       </div>
 
-      <div className="mt-3 bg-white rounded-3xl p-4 shadow-sm border border-gray-100">
+      <div className="mt-3 bg-slate-900/70 rounded-3xl p-4 shadow-sm border border-slate-700">
         <div className="text-sm font-semibold">Контакты</div>
 
         <div className="mt-3 space-y-3">
           <input
-            className="w-full rounded-2xl border border-gray-200 px-3 py-3 text-sm"
+            className="w-full rounded-2xl border border-slate-700 px-3 py-3 text-sm bg-slate-900/80 text-slate-100"
             placeholder="Имя"
             value={profile.name || ""}
             onChange={(e) => setField("name", e.target.value)}
           />
           <input
-            className="w-full rounded-2xl border border-gray-200 px-3 py-3 text-sm"
+            className="w-full rounded-2xl border border-slate-700 px-3 py-3 text-sm bg-slate-900/80 text-slate-100"
             placeholder="Телефон"
             value={profile.phone || ""}
             onChange={(e) => setField("phone", e.target.value)}
           />
           <input
-            className="w-full rounded-2xl border border-gray-200 px-3 py-3 text-sm"
+            className="w-full rounded-2xl border border-slate-700 px-3 py-3 text-sm bg-slate-900/80 text-slate-100"
             placeholder="Адрес / доставка / самовывоз"
             value={profile.address || ""}
             onChange={(e) => setField("address", e.target.value)}
           />
           <textarea
-            className="w-full rounded-2xl border border-gray-200 px-3 py-3 text-sm"
+            className="w-full rounded-2xl border border-slate-700 px-3 py-3 text-sm bg-slate-900/80 text-slate-100"
             placeholder="Комментарий по умолчанию"
             rows={3}
             value={profile.comment || ""}
@@ -44,7 +44,7 @@ export default function ProfilePage() {
         </div>
       </div>
 
-      <div className="mt-3 bg-white rounded-3xl p-4 shadow-sm border border-gray-100 text-xs text-gray-600">
+      <div className="mt-3 bg-slate-900/70 rounded-3xl p-4 shadow-sm border border-slate-700 text-xs text-slate-300">
         В будущем: логин, роли, адреса, история платежей.
       </div>
     </div>

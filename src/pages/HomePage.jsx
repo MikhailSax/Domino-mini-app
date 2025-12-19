@@ -14,8 +14,8 @@ function TopTabs({ items, activeId, onChange }) {
               className={
                 "whitespace-nowrap px-4 py-2 rounded-2xl text-sm border active:scale-[0.99] transition shadow-sm " +
                 (active
-                  ? "bg-gradient-to-r from-rose-500 to-amber-500 text-white border-transparent shadow-[0_12px_30px_rgba(244,63,94,0.3)]"
-                  : "bg-white/80 text-slate-700 border-white/70 hover:border-rose-100")
+                  ? "bg-gradient-to-r from-indigo-500 to-purple-600 text-white border-transparent shadow-[0_12px_30px_rgba(99,102,241,0.35)]"
+                  : "bg-slate-800/70 text-slate-200 border-slate-700 hover:border-indigo-500/60")
               }
             >
               {c.title}
@@ -30,15 +30,15 @@ function TopTabs({ items, activeId, onChange }) {
 function ProductRow({ item, onClick }) {
   return (
     <button
-      className="w-full text-left rounded-3xl bg-white/80 px-4 py-3 shadow-[0_16px_40px_rgba(15,23,42,0.08)] border border-white/70 active:scale-[0.99] transition backdrop-blur"
+      className="w-full text-left rounded-3xl bg-slate-900/70 px-4 py-3 shadow-[0_16px_40px_rgba(0,0,0,0.35)] border border-slate-700/70 active:scale-[0.99] transition backdrop-blur"
       onClick={onClick}
     >
       <div className="flex items-center justify-between gap-3">
         <div>
           <div className="text-sm font-semibold leading-snug">{item.title}</div>
-          <div className="text-[11px] text-slate-500 mt-1">Конфигуратор • Превью макета</div>
+          <div className="text-[11px] text-slate-400 mt-1">Конфигуратор • Превью макета</div>
         </div>
-        <div className="text-rose-500 text-lg">↗</div>
+        <div className="text-indigo-300 text-lg">↗</div>
       </div>
     </button>
   );
@@ -52,7 +52,7 @@ function ServiceChecklist({ onNeedHelp }) {
   ];
 
   return (
-    <div className="mt-4 rounded-3xl bg-white/90 border border-white/80 shadow-[0_18px_45px_rgba(15,23,42,0.08)] p-4">
+    <div className="mt-4 rounded-3xl bg-slate-900/70 border border-slate-700/70 shadow-[0_18px_45px_rgba(0,0,0,0.35)] p-4">
       <div className="flex items-start gap-3">
         <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-500 text-white grid place-items-center shadow-md">
           🤝
@@ -61,8 +61,8 @@ function ServiceChecklist({ onNeedHelp }) {
           <div className="text-sm font-semibold">Поможем собрать заказ без ошибок</div>
           <div className="mt-2 space-y-2">
             {items.map((text) => (
-              <div key={text} className="flex items-start gap-2 text-[13px] text-slate-700 leading-snug">
-                <span className="mt-0.5 text-emerald-500">✔</span>
+              <div key={text} className="flex items-start gap-2 text-[13px] text-slate-300 leading-snug">
+                <span className="mt-0.5 text-emerald-300">✔</span>
                 <span>{text}</span>
               </div>
             ))}
@@ -77,7 +77,7 @@ function ServiceChecklist({ onNeedHelp }) {
             </button>
             <button
               type="button"
-              className="px-4 py-2 rounded-xl border border-slate-200 bg-white text-sm font-semibold text-slate-700 shadow-sm active:scale-[0.99] transition"
+              className="px-4 py-2 rounded-xl border border-slate-700 bg-slate-800 text-sm font-semibold text-slate-200 shadow-sm active:scale-[0.99] transition"
               onClick={() => window?.open?.("tel:+73012222333")}
             >
               Позвонить: +7 (3012) 222-333
@@ -133,8 +133,8 @@ export default function HomePage({ onOpenProduct }) {
         onChange={(id) => setTop(id)}
       />
 
-        <div className="mt-4 glass-card p-5 bg-gradient-to-br from-rose-600/90 via-orange-500/90 to-amber-500/90 text-white shadow-xl overflow-hidden relative">
-        <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.6),transparent_35%),radial-gradient(circle_at_80%_30%,rgba(255,255,255,0.4),transparent_40%)]" />
+        <div className="mt-4 glass-card p-5 bg-gradient-to-br from-indigo-700/90 via-blue-600/90 to-purple-700/90 text-white shadow-xl overflow-hidden relative">
+        <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.2),transparent_35%),radial-gradient(circle_at_80%_30%,rgba(255,255,255,0.18),transparent_40%)]" />
         <div className="relative">
           <div className="text-xs uppercase tracking-wide text-white/80">{topTitle}</div>
           <div className="text-2xl font-semibold mt-1 leading-tight">Создай идеальный тираж</div>
@@ -142,13 +142,13 @@ export default function HomePage({ onOpenProduct }) {
 
           <div className="mt-4 grid grid-cols-2 gap-2">
             <button
-              className="rounded-2xl bg-white text-rose-600 px-4 py-2 text-sm font-semibold active:scale-[0.99] transition shadow-lg shadow-rose-900/10"
+              className="rounded-2xl bg-slate-900 text-indigo-200 px-4 py-2 text-sm font-semibold active:scale-[0.99] transition shadow-lg shadow-indigo-900/30"
               onClick={() => alert("Позже: промокоды")}
             >
               Промокод
             </button>
             <button
-              className="rounded-2xl bg-white/15 px-4 py-2 text-sm font-semibold active:scale-[0.99] transition border border-white/40"
+              className="rounded-2xl bg-white/10 px-4 py-2 text-sm font-semibold active:scale-[0.99] transition border border-white/30"
               onClick={() => alert("Позже: консультация")}
             >
               Консультация
@@ -161,7 +161,7 @@ export default function HomePage({ onOpenProduct }) {
 
       <div className="mt-4 space-y-2">
         {loading && (
-          <div className="rounded-2xl bg-white p-4 shadow-sm border border-gray-100 text-sm text-gray-600">
+          <div className="rounded-2xl bg-slate-900/70 p-4 shadow-sm border border-slate-700 text-sm text-slate-300">
             Загрузка…
           </div>
         )}
@@ -172,7 +172,7 @@ export default function HomePage({ onOpenProduct }) {
           ))}
 
         {!loading && items.length === 0 && (
-          <div className="rounded-2xl bg-white p-4 shadow-sm border border-gray-100 text-sm text-gray-600">
+          <div className="rounded-2xl bg-slate-900/70 p-4 shadow-sm border border-slate-700 text-sm text-slate-300">
             Ничего не найдено.
           </div>
         )}
