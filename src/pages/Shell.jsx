@@ -28,7 +28,7 @@ function ShellInner() {
   const screen = route.name;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-rose-50 via-white to-amber-50 text-slate-900">
+    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-indigo-950 text-slate-100">
       <Header cartCount={cartCount} onCartClick={openCart} />
 
       {screen === "home" && (
