@@ -52,9 +52,6 @@ function ServiceChecklist({ onNeedHelp }) {
   return (
     <div className="mt-4 rounded-3xl bg-white border border-slate-200 shadow-[0_16px_40px_rgba(0,0,0,0.08)] p-4">
       <div className="flex items-start gap-3">
-        <div className="w-11 h-11 rounded-2xl bg-black text-white grid place-items-center shadow-md">
-          🤝
-        </div>
         <div className="flex-1">
           <div className="text-sm font-semibold">Поможем собрать заказ без ошибок</div>
           <div className="mt-2 space-y-2">

@@ -10,7 +10,6 @@ export default function CheckoutPage({ onBack, onDone }) {
   const { profile, setField } = useProfile();
 
   const total = useMemo(() => items.reduce((s, it) => s + Number(it.price || 0), 0), [items]);
-  const [comment, setComment] = useState(profile.comment || "");
   const [fileName, setFileName] = useState("");
 
   const disabled = items.length === 0;
@@ -23,40 +22,39 @@ export default function CheckoutPage({ onBack, onDone }) {
         </button>
       </div>
 
-      <div className="mt-3 rounded-3xl bg-black text-white p-5 shadow-sm border border-black">
+      <div className="mt-3 rounded-3xl bg-white text-black p-5 shadow-sm border border-slate-200">
         <div className="text-sm opacity-80">Оформление</div>
         <div className="text-2xl font-semibold mt-1 leading-tight">Данные заказа</div>
-        <div className="text-xs opacity-70 mt-2">Пока фронт. Потом отправим в REST API.</div>
+        <div className="text-xs opacity-70 mt-2 text-black">Пока фронт. Потом отправим в REST API.</div>
       </div>
 
-      <div className="mt-3 bg-black/80 rounded-3xl p-4 shadow-sm border border-black">
+      <div className="mt-3 bg-white rounded-3xl p-4 shadow-sm border border-slate-200">
         <div className="text-sm font-semibold">Контакты</div>
 
         <div className="mt-3 space-y-3">
           <input
-            className="w-full rounded-2xl border border-black px-3 py-3 text-sm bg-black/80 text-white"
+            className="w-full rounded-2xl border border-slate-200 px-3 py-3 text-sm bg-white text-black"
             placeholder="Имя"
             value={profile.name || ""}
             onChange={(e) => setField("name", e.target.value)}
           />
           <input
-            className="w-full rounded-2xl border border-black px-3 py-3 text-sm bg-black/80 text-white"
+            className="w-full rounded-2xl border border-slate-200 px-3 py-3 text-sm bg-white text-black"
+            placeholder="Фамилия"
+            value={profile.lastName || ""}
+            onChange={(e) => setField("lastName", e.target.value)}
+          />
+          <input
+            className="w-full rounded-2xl border border-slate-200 px-3 py-3 text-sm bg-white text-black"
             placeholder="Телефон"
             value={profile.phone || ""}
             onChange={(e) => setField("phone", e.target.value)}
           />
           <input
-            className="w-full rounded-2xl border border-black px-3 py-3 text-sm bg-black/80 text-white"
+            className="w-full rounded-2xl border border-slate-200 px-3 py-3 text-sm bg-white text-black"
             placeholder="Адрес / доставка / самовывоз"
             value={profile.address || ""}
             onChange={(e) => setField("address", e.target.value)}
-          />
-          <textarea
-            className="w-full rounded-2xl border border-black px-3 py-3 text-sm bg-black/80 text-white"
-            placeholder="Комментарий к заказу"
-            rows={3}
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
           />
         </div>
       </div>
@@ -75,23 +73,22 @@ export default function CheckoutPage({ onBack, onDone }) {
         </div>
       </div>
 
-      <div className="mt-3 bg-black/80 rounded-3xl p-4 shadow-sm border border-black">
+      <div className="mt-3 bg-white rounded-3xl p-4 shadow-sm border border-slate-200">
         <div className="flex items-center justify-between">
-          <div className="text-sm text-slate-400">Итого</div>
-          <div className="text-base font-semibold">{formatRUB(total)}</div>
+          <div className="text-sm text-slate-700">Итого</div>
+          <div className="text-base font-semibold text-black">{formatRUB(total)}</div>
         </div>
 
         <button
-          className={"mt-3 w-full rounded-2xl py-3 text-sm font-medium active:scale-[0.99] transition " + (disabled ? "bg-slate-800 text-slate-500" : "bg-black text-white shadow-lg")}
+          className={"mt-3 w-full rounded-2xl py-3 text-sm font-medium active:scale-[0.99] transition " + (disabled ? "bg-slate-200 text-slate-500" : "bg-black text-white shadow-lg")}
           disabled={disabled}
           onClick={() => {
-            setField("comment", comment);
             addOrder({
               customer: {
                 name: profile.name || "",
+                lastName: profile.lastName || "",
                 phone: profile.phone || "",
                 address: profile.address || "",
-                comment,
               },
               items,
               total,
