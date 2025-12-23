@@ -30,14 +30,8 @@ body {
   @apply bg-white text-slate-900 border border-slate-300 rounded-2xl active:scale-[0.99] transition shadow-sm;
 }
 
-button {
-  background-color: #000 !important;
-  color: #fff !important;
-  border-color: #000 !important;
-}
-
-button.btn-ghost {
-  background-color: #fff !important;
-  color: #0f172a !important;
-  border-color: rgb(226 232 240) !important;
+.btn-ghost {
+  background-color: #fff;
+  color: #0f172a;
+  border-color: rgb(226 232 240);
 }
