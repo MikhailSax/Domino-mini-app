@@ -51,10 +51,8 @@ function TopTabs({ items, activeId, onChange }) {
                     key={c.id}
                     onClick={() => onChange(c.id)}
                     className={
-                        "whitespace-nowrap px-4 py-2 rounded-2xl text-sm border active:scale-[0.99] transition shadow-sm " +
-                        (active
-                            ? "bg-gradient-to-r from-indigo-500 to-purple-600 text-white border-transparent shadow-[0_12px_30px_rgba(99,102,241,0.35)]"
-                            : "bg-slate-800/70 text-slate-200 border-slate-700 hover:border-indigo-500/60")
+                        "whitespace-nowrap px-4 py-2 text-sm shadow-sm " +
+                        (active ? "btn-black" : "btn-ghost text-slate-700")
                     }
                 >
                   {c.title}
@@ -70,19 +68,19 @@ function ProductCard({ item, onOpen }) {
   return (
       <button
           onClick={onOpen}
-          className="text-left rounded-3xl bg-slate-900/70 shadow-[0_20px_50px_rgba(0,0,0,0.35)] border border-slate-700/70 overflow-hidden active:scale-[0.99] transition backdrop-blur"
+          className="text-left rounded-3xl bg-white shadow-[0_16px_40px_rgba(0,0,0,0.08)] border border-slate-200 overflow-hidden active:scale-[0.99] transition"
       >
-        <div className="aspect-[4/3] bg-gradient-to-br from-slate-800 via-slate-900 to-indigo-950 relative">
-          <div className="absolute inset-0 opacity-50 bg-[radial-gradient(circle_at_20%_20%,rgba(99,102,241,0.18),transparent_55%),radial-gradient(circle_at_80%_30%,rgba(59,130,246,0.16),transparent_50%)]" />
-          <div className="absolute inset-0 grid place-items-center text-slate-300">
+        <div className="aspect-[4/3] bg-gradient-to-br from-white via-slate-50 to-slate-100 relative">
+          <div className="absolute inset-0 opacity-70 bg-[radial-gradient(circle_at_20%_20%,rgba(15,23,42,0.05),transparent_55%),radial-gradient(circle_at_80%_30%,rgba(15,23,42,0.04),transparent_50%)]" />
+          <div className="absolute inset-0 grid place-items-center text-slate-400">
             <div className="text-center">
-              <IconPrinter className="w-11 h-11 mx-auto" />
-              <div className="mt-1 text-[11px] text-indigo-200/80">Превью</div>
+              <IconPrinter className="w-11 h-11 mx-auto text-slate-400" />
+              <div className="mt-1 text-[11px] text-slate-500">Превью</div>
             </div>
           </div>
 
           <div className="absolute top-3 left-3">
-            <span className="text-[11px] px-2.5 py-1 rounded-full bg-slate-900/80 backdrop-blur border border-indigo-900 text-indigo-100 shadow whitespace-nowrap">
+            <span className="text-[11px] px-2.5 py-1 rounded-full bg-black text-white shadow whitespace-nowrap">
               от {formatRUB(item.priceFrom ?? 900)}
             </span>
           </div>
@@ -94,7 +92,7 @@ function ProductCard({ item, onOpen }) {
           </div>
 
           <div className="mt-3 flex items-center justify-between">
-            <div className="text-xs text-indigo-200 font-semibold">Открыть конфигуратор</div>
+            <div className="text-xs text-slate-600 font-semibold">Открыть конфигуратор</div>
             <IconArrow />
           </div>
         </div>
@@ -156,14 +154,14 @@ export default function CatalogPage({ onOpenProduct }) {
             }}
         />
 
-        <div className="mt-4 glass-card p-5 bg-gradient-to-br from-indigo-700/90 via-blue-600/90 to-purple-700/90 text-white shadow-xl relative overflow-hidden">
-          <div className="absolute inset-0 opacity-25 bg-[radial-gradient(circle_at_10%_10%,rgba(255,255,255,0.25),transparent_35%),radial-gradient(circle_at_90%_20%,rgba(255,255,255,0.2),transparent_40%)]" />
+        <div className="mt-4 glass-card p-5 bg-gradient-to-br from-white to-slate-50 text-slate-900 shadow-xl relative overflow-hidden">
+          <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_10%_10%,rgba(15,23,42,0.05),transparent_35%),radial-gradient(circle_at_90%_20%,rgba(15,23,42,0.04),transparent_40%)]" />
           <div className="relative">
-            <div className="text-xs uppercase tracking-wide text-white/80">{title}</div>
+            <div className="text-xs uppercase tracking-wide text-slate-500">{title}</div>
             <div className="text-2xl font-semibold mt-1 leading-tight">
               Каталог продукции
             </div>
-            <div className="text-sm text-white/80 mt-2">
+            <div className="text-sm text-slate-600 mt-2">
               Выбирай товар, настраивай детали, добавляй в корзину — без лишних кликов.
             </div>
           </div>
@@ -175,12 +173,12 @@ export default function CatalogPage({ onOpenProduct }) {
                 {Array.from({ length: 4 }).map((_, i) => (
                     <div
                         key={i}
-                        className="rounded-3xl bg-slate-900/70 border border-slate-700 overflow-hidden"
+                        className="rounded-3xl bg-white border border-slate-200 overflow-hidden shadow-sm"
                     >
-                      <div className="aspect-[4/3] bg-slate-800 animate-pulse" />
+                      <div className="aspect-[4/3] bg-slate-100 animate-pulse" />
                       <div className="p-4 space-y-2">
-                        <div className="h-4 bg-slate-800 rounded animate-pulse" />
-                        <div className="h-3 bg-slate-800 rounded w-2/3 animate-pulse" />
+                        <div className="h-4 bg-slate-100 rounded animate-pulse" />
+                        <div className="h-3 bg-slate-100 rounded w-2/3 animate-pulse" />
                       </div>
                     </div>
                 ))}
@@ -188,7 +186,7 @@ export default function CatalogPage({ onOpenProduct }) {
           )}
 
           {!loadingItems && filtered.length === 0 && (
-              <div className="rounded-3xl bg-slate-900/70 p-4 shadow-sm border border-slate-700 text-sm text-slate-300">
+              <div className="rounded-3xl bg-white p-4 shadow-sm border border-slate-200 text-sm text-slate-600">
                 Ничего не найдено.
               </div>
           )}

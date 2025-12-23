@@ -3,15 +3,13 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
   --bottom-nav-h: 88px; /* высота нижней навигации */
 }
 
 body {
-  @apply antialiased text-slate-100;
-  background: radial-gradient(circle at 15% 20%, rgba(96, 165, 250, 0.18) 0, transparent 32%),
-    radial-gradient(circle at 85% 5%, rgba(167, 139, 250, 0.2) 0, transparent 30%),
-    linear-gradient(180deg, #0b1224 0%, #0c172f 40%, #0a1326 100%);
+  @apply antialiased text-slate-900;
+  background: #ffffff;
   min-height: 100vh;
 }
 
@@ -21,5 +19,25 @@ body {
 }
 
 .glass-card {
-  @apply bg-slate-900/60 backdrop-blur border border-slate-700/70 shadow-[0_20px_60px_rgba(0,0,0,0.35)] rounded-3xl;
+  @apply bg-white backdrop-blur border border-slate-200 shadow-[0_16px_40px_rgba(0,0,0,0.1)] rounded-3xl;
+}
+
+.btn-black {
+  @apply bg-black text-white border border-black rounded-2xl active:scale-[0.99] transition shadow-[0_8px_24px_rgba(0,0,0,0.15)];
+}
+
+.btn-ghost {
+  @apply bg-white text-slate-900 border border-slate-300 rounded-2xl active:scale-[0.99] transition shadow-sm;
+}
+
+button {
+  background-color: #000 !important;
+  color: #fff !important;
+  border-color: #000 !important;
+}
+
+button.btn-ghost {
+  background-color: #fff !important;
+  color: #0f172a !important;
+  border-color: rgb(226 232 240) !important;
 }
