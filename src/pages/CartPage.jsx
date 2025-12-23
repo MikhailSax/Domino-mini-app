@@ -73,7 +73,7 @@ export default function CartPage({ onBack, onCheckout }) {
                             <div className="text-sm font-semibold">{formatRUB(it.price)}</div>
                         </div>
 
-                        <div className="mt-2 text-[11px] text-slate-500">
+                        <div className="mt-2 text-[11px] text-black">
                             Цена сейчас считается демо-логикой. Потом заменим на REST.
                         </div>
                     </div>
