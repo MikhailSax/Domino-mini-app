@@ -10,7 +10,7 @@ function IconPrinter({ className = "w-12 h-12" }) {
           fill="none"
           stroke="currentColor"
           strokeWidth="1.6"
-          className={"text-indigo-300 " + className}
+          className={"text-slate-400 " + className}
       >
         <path
             d="M7 9V4.5A1.5 1.5 0 0 1 8.5 3h7A1.5 1.5 0 0 1 17 4.5V9"
@@ -32,7 +32,7 @@ function IconArrow({ className = "w-4 h-4" }) {
           fill="none"
           stroke="currentColor"
           strokeWidth="1.8"
-          className={"text-indigo-300 " + className}
+          className={"text-slate-400 " + className}
       >
         <path d="M7 17 17 7" strokeLinecap="round" strokeLinejoin="round" />
         <path d="M9 7h8v8" strokeLinecap="round" strokeLinejoin="round" />
