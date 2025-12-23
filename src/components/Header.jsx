@@ -2,7 +2,7 @@ import React from "react";
 
 export default function Header({ cartCount = 0, onCartClick }) {
   return (
-    <div className="sticky top-0 z-50 bg-gradient-to-b from-slate-950/80 via-slate-900/70 to-transparent backdrop-blur-xl">
+    <div className="sticky top-0 z-50 bg-white/90 backdrop-blur-xl border-b border-slate-200 shadow-sm">
       <div className="max-w-md mx-auto px-4 pt-4 pb-3">
         <div className="glass-card p-3 shadow-lg">
           <div className="flex items-center justify-between gap-3">
@@ -18,7 +18,7 @@ export default function Header({ cartCount = 0, onCartClick }) {
 
             <div className="flex items-center gap-2">
               <button
-                className="relative rounded-2xl bg-gradient-to-br from-indigo-600 to-purple-600 px-4 py-2 text-sm text-white shadow-md active:scale-[0.99] transition"
+                className="relative btn-black px-4 py-2 text-sm"
                 onClick={onCartClick}
                 aria-label="Корзина"
               >
