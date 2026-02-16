@@ -5,6 +5,7 @@ import Navigation from "../components/Navigation.jsx";
 import { CartProvider, useCart } from "../app/CartContext.jsx";
 import { OrdersProvider } from "../app/OrdersContext.jsx";
 import { ProfileProvider } from "../app/ProfileContext.jsx";
+import { AuthProvider, useAuth } from "../app/AuthContext.jsx";
 
 import HomePage from "./HomePage.jsx";
 import CatalogPage from "./CatalogPage.jsx";
@@ -19,6 +20,7 @@ function ShellInner() {
   // home | catalog | orders | profile | product | cart | checkout
 
   const { items } = useCart();
+  const { status, error, user } = useAuth();
   const cartCount = useMemo(() => items.length, [items]);
 
   const openProduct = (slug) => setRoute({ name: "product", slug });
@@ -29,15 +31,17 @@ function ShellInner() {
 
   return (
     <div className="min-h-screen bg-white text-slate-900">
-      <Header cartCount={cartCount} onCartClick={openCart} />
+      <Header
+        cartCount={cartCount}
+        onCartClick={openCart}
+        authStatus={status}
+        authError={error}
+        userLabel={user?.username || user?.firstName || user?.id || "пользователь"}
+      />
 
-      {screen === "home" && (
-        <HomePage onOpenProduct={openProduct} />
-      )}
+      {screen === "home" && <HomePage onOpenProduct={openProduct} />}
 
-      {screen === "catalog" && (
-        <CatalogPage onOpenProduct={openProduct} />
-      )}
+      {screen === "catalog" && <CatalogPage onOpenProduct={openProduct} />}
 
       {screen === "product" && (
         <ProductPage
@@ -79,12 +83,14 @@ function ShellInner() {
 
 export default function Shell() {
   return (
-    <ProfileProvider>
-      <OrdersProvider>
-        <CartProvider>
-          <ShellInner />
-        </CartProvider>
-      </OrdersProvider>
-    </ProfileProvider>
+    <AuthProvider>
+      <ProfileProvider>
+        <OrdersProvider>
+          <CartProvider>
+            <ShellInner />
+          </CartProvider>
+        </OrdersProvider>
+      </ProfileProvider>
+    </AuthProvider>
   );
 }
