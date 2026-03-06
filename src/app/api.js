@@ -1,7 +1,7 @@
 const USE_MOCK = true;
 
 // Категории и продукция синхронизированы с разделом https://domline.ru/produkciya
-// (снимок структуры и названий на момент обновления).
+// (снимок структуры и названий на 2026-03-06).
 export const TOP_CATEGORIES = [
   { id: "poligrafiya", title: "Полиграфия" },
   { id: "banner-print", title: "Печать баннера" },
@@ -11,13 +11,14 @@ export const TOP_CATEGORIES = [
 ];
 
 // 👇 Основной массив для редактирования цен и фото товаров.
+// Часть цен синхронизирована по schema.org price со страниц /produkciya (2026-03-06).
 // Можно менять priceFrom, pricing и images под актуальный прайс/контент.
 // pricing.tiers — стоимость за 1 шт в диапазоне тиража.
 // По умолчанию поддерживаются диапазоны: 1–50, 51–100, 101–200, 201–500.
 const PRODUCT_SETTINGS = [
   {
     slug: "vizitki-pechat",
-    priceFrom: 1500,
+    priceFrom: 262,
     pricing: {
       tiers: [
         { from: 1, to: 50, unitPrice: 30 },
@@ -30,7 +31,7 @@ const PRODUCT_SETTINGS = [
   },
   {
     slug: "listovki-pechat",
-    priceFrom: 2100,
+    priceFrom: 1995,
     pricing: {
       tiers: [
         { from: 1, to: 50, unitPrice: 45 },
@@ -40,6 +41,26 @@ const PRODUCT_SETTINGS = [
       ],
     },
     images: ["/images/products/slide-2.svg", "/images/products/slide-3.svg", "/images/products/slide-1.svg"],
+  },
+  {
+    slug: "buklety-pechat",
+    priceFrom: 2037,
+  },
+  {
+    slug: "kvartal-nyy-kalendar-luks",
+    priceFrom: 511,
+  },
+  {
+    slug: "kalendar--domik",
+    priceFrom: 84,
+  },
+  {
+    slug: "kalendar-nastol-nyy-perekidnoy",
+    priceFrom: 315,
+  },
+  {
+    slug: "paket-bumazhnyy",
+    priceFrom: 43575,
   },
   {
     slug: "pechat-bannera",
@@ -121,7 +142,6 @@ const DEFAULT_SLIDES = ["/images/products/slide-1.svg", "/images/products/slide-
 
 const RAW_PRODUCTS = [
   { title: "Визитки", slug: "vizitki-pechat", category: "poligrafiya", description: "Печать визиток — быстро и качественно для вашего бизнеса.", sourceUrl: "https://domline.ru/produkciya/vizitki-pechat" },
-  { title: "Визитки с ламинацией", slug: "vizitki-pechat-s-laminaciei", category: "poligrafiya", description: "Визитки с дополнительной ламинацией для более презентабельного вида и защиты.", sourceUrl: "https://domline.ru/produkciya/vizitki-pechat-s-laminaciei" },
   { title: "Листовки", slug: "listovki-pechat", category: "poligrafiya", description: "Печать рекламных листовок для акций, событий и промо-кампаний.", sourceUrl: "https://domline.ru/produkciya/listovki-pechat" },
   { title: "Буклеты", slug: "buklety-pechat", category: "poligrafiya", description: "Печать буклетов для презентации услуг и товаров.", sourceUrl: "https://domline.ru/produkciya/buklety-pechat" },
   { title: "Квартальный календарь — Люкс", slug: "kvartal-nyy-kalendar-luks", category: "poligrafiya", description: "Премиальный квартальный календарь для офиса и корпоративных подарков.", sourceUrl: "https://domline.ru/produkciya/kvartal-nyy-kalendar-luks" },
@@ -129,8 +149,6 @@ const RAW_PRODUCTS = [
   { title: "Календарь настольный перекидной", slug: "kalendar-nastol-nyy-perekidnoy", category: "poligrafiya", description: "Перекидной настольный календарь с индивидуальным дизайном.", sourceUrl: "https://domline.ru/produkciya/kalendar-nastol-nyy-perekidnoy" },
   { title: "Пакет бумажный", slug: "paket-bumazhnyy", category: "poligrafiya", description: "Бумажные пакеты с фирменной печатью.", sourceUrl: "https://domline.ru/produkciya/paket-bumazhnyy" },
   { title: "Пакет крафт", slug: "paket-kraft", category: "poligrafiya", description: "Крафтовые пакеты для экологичной упаковки и брендинга.", sourceUrl: "https://domline.ru/produkciya/paket-kraft" },
-  { title: "Дипломы", slug: "diplom", category: "poligrafiya", description: "Изготовление дипломов и наградной полиграфии.", sourceUrl: "https://domline.ru/produkciya/diplom" },
-  { title: "Печать грамот", slug: "gramota", category: "poligrafiya", description: "Печать грамот на заказ с выбором форматов и материалов.", sourceUrl: "https://domline.ru/produkciya/gramota" },
 
   { title: "Печать баннера", slug: "pechat-bannera", category: "banner-print", description: "Печать баннеров для наружной рекламы и мероприятий.", sourceUrl: "https://domline.ru/produkciya/pechat-bannera" },
   { title: "Пресс волл из хромированных труб", slug: "pechat-press-voll", category: "banner-print", description: "Изготовление пресс-воллов с баннерной печатью.", sourceUrl: "https://domline.ru/produkciya/pechat-press-voll" },
