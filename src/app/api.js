@@ -12,39 +12,109 @@ export const TOP_CATEGORIES = [
 
 // 👇 Основной массив для редактирования цен и фото товаров.
 // Можно менять priceFrom, pricing и images под актуальный прайс/контент.
+// pricing.tiers — стоимость за 1 шт в диапазоне тиража.
+// По умолчанию поддерживаются диапазоны: 1–50, 51–100, 101–200, 201–500.
 const PRODUCT_SETTINGS = [
   {
     slug: "vizitki-pechat",
     priceFrom: 1500,
-    pricing: { baseQty: 100, basePrice: 1500, extraUnitPrice: 8 },
+    pricing: {
+      tiers: [
+        { from: 1, to: 50, unitPrice: 30 },
+        { from: 51, to: 100, unitPrice: 20 },
+        { from: 101, to: 200, unitPrice: 15 },
+        { from: 201, to: 500, unitPrice: 12 },
+      ],
+    },
     images: ["/images/products/slide-1.svg", "/images/products/slide-2.svg", "/images/products/slide-3.svg"],
   },
   {
     slug: "listovki-pechat",
     priceFrom: 2100,
-    pricing: { baseQty: 100, basePrice: 2100, extraUnitPrice: 12 },
+    pricing: {
+      tiers: [
+        { from: 1, to: 50, unitPrice: 45 },
+        { from: 51, to: 100, unitPrice: 30 },
+        { from: 101, to: 200, unitPrice: 22 },
+        { from: 201, to: 500, unitPrice: 18 },
+      ],
+    },
     images: ["/images/products/slide-2.svg", "/images/products/slide-3.svg", "/images/products/slide-1.svg"],
   },
   {
     slug: "pechat-bannera",
     priceFrom: 3200,
-    pricing: { baseQty: 1, basePrice: 3200, extraUnitPrice: 950 },
+    pricing: {
+      tiers: [
+        { from: 1, to: 50, unitPrice: 3200 },
+        { from: 51, to: 100, unitPrice: 3000 },
+        { from: 101, to: 200, unitPrice: 2800 },
+        { from: 201, to: 500, unitPrice: 2500 },
+      ],
+    },
     images: ["/images/products/slide-3.svg", "/images/products/slide-1.svg", "/images/products/slide-2.svg"],
   },
   {
     slug: "pechati",
     priceFrom: 1300,
-    pricing: { baseQty: 1, basePrice: 1300, extraUnitPrice: 450 },
+    pricing: {
+      tiers: [
+        { from: 1, to: 50, unitPrice: 1300 },
+        { from: 51, to: 100, unitPrice: 1150 },
+        { from: 101, to: 200, unitPrice: 1000 },
+        { from: 201, to: 500, unitPrice: 900 },
+      ],
+    },
     images: ["/images/products/slide-1.svg", "/images/products/slide-2.svg", "/images/products/slide-3.svg"],
   },
 ];
 
 const CATEGORY_PRICING = {
-  poligrafiya: { priceFrom: 1400, baseQty: 100, basePrice: 1400, extraUnitPrice: 8 },
-  "banner-print": { priceFrom: 3200, baseQty: 1, basePrice: 3200, extraUnitPrice: 920 },
-  stamps: { priceFrom: 1200, baseQty: 1, basePrice: 1200, extraUnitPrice: 420 },
-  outdoor: { priceFrom: 2600, baseQty: 1, basePrice: 2600, extraUnitPrice: 780 },
-  business: { priceFrom: 1600, baseQty: 50, basePrice: 1600, extraUnitPrice: 20 },
+  poligrafiya: {
+    priceFrom: 1400,
+    tiers: [
+      { from: 1, to: 50, unitPrice: 35 },
+      { from: 51, to: 100, unitPrice: 22 },
+      { from: 101, to: 200, unitPrice: 16 },
+      { from: 201, to: 500, unitPrice: 12 },
+    ],
+  },
+  "banner-print": {
+    priceFrom: 3200,
+    tiers: [
+      { from: 1, to: 50, unitPrice: 3200 },
+      { from: 51, to: 100, unitPrice: 3000 },
+      { from: 101, to: 200, unitPrice: 2800 },
+      { from: 201, to: 500, unitPrice: 2500 },
+    ],
+  },
+  stamps: {
+    priceFrom: 1200,
+    tiers: [
+      { from: 1, to: 50, unitPrice: 1200 },
+      { from: 51, to: 100, unitPrice: 1100 },
+      { from: 101, to: 200, unitPrice: 980 },
+      { from: 201, to: 500, unitPrice: 880 },
+    ],
+  },
+  outdoor: {
+    priceFrom: 2600,
+    tiers: [
+      { from: 1, to: 50, unitPrice: 2600 },
+      { from: 51, to: 100, unitPrice: 2400 },
+      { from: 101, to: 200, unitPrice: 2200 },
+      { from: 201, to: 500, unitPrice: 2000 },
+    ],
+  },
+  business: {
+    priceFrom: 1600,
+    tiers: [
+      { from: 1, to: 50, unitPrice: 1600 },
+      { from: 51, to: 100, unitPrice: 1450 },
+      { from: 101, to: 200, unitPrice: 1300 },
+      { from: 201, to: 500, unitPrice: 1150 },
+    ],
+  },
 };
 
 const DEFAULT_SLIDES = ["/images/products/slide-1.svg", "/images/products/slide-2.svg", "/images/products/slide-3.svg"];
@@ -95,23 +165,43 @@ const SETTINGS_BY_SLUG = PRODUCT_SETTINGS.reduce((acc, item) => {
 function getPricingProfile(product) {
   const category = CATEGORY_PRICING[product.category] || CATEGORY_PRICING.poligrafiya;
   const custom = SETTINGS_BY_SLUG[product.slug]?.pricing;
+  const tiers = custom?.tiers || category.tiers;
   return {
-    baseQty: Number(custom?.baseQty ?? category.baseQty ?? 100),
-    basePrice: Number(custom?.basePrice ?? category.basePrice ?? 1000),
-    extraUnitPrice: Number(custom?.extraUnitPrice ?? category.extraUnitPrice ?? 10),
+    tiers: Array.isArray(tiers) && tiers.length
+      ? tiers.map((tier, index) => {
+          const from = Math.max(1, Number(tier.from ?? 1));
+          const nextFrom = Number(tiers[index + 1]?.from);
+          const to = Number(tier.to ?? (Number.isFinite(nextFrom) ? nextFrom - 1 : Number.MAX_SAFE_INTEGER));
+
+          return {
+            from,
+            to: to >= from ? to : from,
+            unitPrice: Math.max(0, Number(tier.unitPrice ?? 0)),
+          };
+        })
+      : [
+          { from: 1, to: 50, unitPrice: 1000 },
+          { from: 51, to: 100, unitPrice: 900 },
+          { from: 101, to: 200, unitPrice: 800 },
+          { from: 201, to: 500, unitPrice: 700 },
+        ],
   };
 }
 
 export function calculateProductPrice({ qty, material, term, pricingProfile }) {
   const safeQty = Math.max(1, Number(qty || 1));
-  const profile = pricingProfile || { baseQty: 100, basePrice: 1000, extraUnitPrice: 10 };
+  const profile = pricingProfile || {
+    tiers: [
+      { from: 1, to: 50, unitPrice: 1000 },
+      { from: 51, to: 100, unitPrice: 900 },
+      { from: 101, to: 200, unitPrice: 800 },
+      { from: 201, to: 500, unitPrice: 700 },
+    ],
+  };
 
-  const baseQty = Math.max(1, Number(profile.baseQty || 100));
-  const basePrice = Math.max(0, Number(profile.basePrice || 1000));
-  const extraUnitPrice = Math.max(0, Number(profile.extraUnitPrice || 10));
-
-  const extraQty = Math.max(0, safeQty - baseQty);
-  const subtotal = basePrice + extraQty * extraUnitPrice;
+  const tiers = Array.isArray(profile.tiers) && profile.tiers.length ? profile.tiers : [{ from: 1, to: Number.MAX_SAFE_INTEGER, unitPrice: 1000 }];
+  const activeTier = tiers.find((tier) => safeQty >= tier.from && safeQty <= tier.to) || tiers[tiers.length - 1];
+  const subtotal = safeQty * Math.max(0, Number(activeTier?.unitPrice || 0));
 
   const kTerm = term === "Срочно" ? 1.3 : 1;
   const kMat = material === "Премиум" ? 1.25 : material === "Плотнее" ? 1.12 : 1;
@@ -130,7 +220,7 @@ const PRODUCTS_BY_CATEGORY = RAW_PRODUCTS.reduce((acc, item, index) => {
     id: index + 1,
     title: item.title,
     slug: item.slug,
-    priceFrom: Number(customSettings.priceFrom ?? categoryPricing.priceFrom ?? pricingProfile.basePrice),
+    priceFrom: Number(customSettings.priceFrom ?? categoryPricing.priceFrom ?? pricingProfile.tiers?.[0]?.unitPrice ?? 0),
     pricingProfile,
     images: customSettings.images?.length ? customSettings.images : DEFAULT_SLIDES,
     description: item.description,
@@ -176,7 +266,14 @@ export const api = {
 
     const all = Object.values(PRODUCTS_BY_CATEGORY).flat();
     const p = all.find((x) => x.slug === slug);
-    const profile = pricingProfile || p?.pricingProfile || { baseQty: 100, basePrice: Number(priceFrom || 1000), extraUnitPrice: 10 };
+    const profile = pricingProfile || p?.pricingProfile || {
+      tiers: [
+        { from: 1, to: 50, unitPrice: Number(priceFrom || 1000) },
+        { from: 51, to: 100, unitPrice: Number(priceFrom || 1000) },
+        { from: 101, to: 200, unitPrice: Number(priceFrom || 1000) },
+        { from: 201, to: 500, unitPrice: Number(priceFrom || 1000) },
+      ],
+    };
 
     return calculateProductPrice({ qty, material, term, pricingProfile: profile });
   },
