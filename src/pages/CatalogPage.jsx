@@ -81,7 +81,7 @@ function ProductCard({ item, onOpen }) {
 
           <div className="absolute top-3 left-3">
             <span className="text-[11px] px-2.5 py-1 rounded-full bg-black text-white shadow whitespace-nowrap">
-              от {formatRUB(item.priceFrom ?? 900)}
+              {formatRUB(item.minBatchPrice ?? item.priceFrom ?? 900)} за тираж от {item.minQty ?? 1} шт
             </span>
           </div>
         </div>

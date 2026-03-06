@@ -104,8 +104,8 @@ export default function ProductPage({ slug, onBack, onGoCart }) {
             <div className="text-sm text-slate-600 mt-1">{p.description}</div>
           </div>
           <div className="text-right shrink-0">
-            <div className="text-xs text-slate-500">от</div>
-            <div className="text-lg font-semibold">{formatRUB(price)}</div>
+            <div className="text-xs text-slate-500">Минимальный тираж</div>
+            <div className="text-lg font-semibold">{formatRUB(p.minBatchPrice ?? p.priceFrom ?? price)}</div>
           </div>
         </div>
 
