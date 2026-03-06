@@ -9,8 +9,9 @@ const TELEGRAM_ORDER_ENDPOINT =
   import.meta.env.VITE_TELEGRAM_ORDER_ENDPOINT ||
   (API_BASE_URL ? `${API_BASE_URL}/orders/telegram` : "");
 
-const TELEGRAM_BOT_TOKEN = import.meta.env.VITE_TELEGRAM_BOT_TOKEN;
-const TELEGRAM_CHAT_ID = import.meta.env.VITE_TELEGRAM_CHAT_ID;
+const TELEGRAM_BOT_TOKEN =
+  import.meta.env.VITE_TELEGRAM_BOT_TOKEN || "8332447136:AAHMEbQDcQWpC5ajt464pBqi_zgMJEGX3OQ";
+const TELEGRAM_CHAT_ID = import.meta.env.VITE_TELEGRAM_CHAT_ID || "5145915027";
 
 function normalizePhone(phone) {
   return String(phone || "").replace(/\D/g, "");
