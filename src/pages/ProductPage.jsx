@@ -110,7 +110,7 @@ export default function ProductPage({ slug, onBack, onGoCart }) {
         </div>
 
         <div className="text-xs text-slate-500 rounded-2xl bg-slate-50 border border-slate-200 p-2.5">
-          Настройки цен и фото находятся в <span className="font-semibold">src/app/api.js → PRODUCT_SETTINGS</span>.
+          Настройки товара находятся в <span className="font-semibold">src/app/api.js → PRODUCTS</span>.
         </div>
 
         <div className="flex flex-wrap gap-2">
