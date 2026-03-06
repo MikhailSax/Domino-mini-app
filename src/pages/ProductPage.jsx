@@ -15,7 +15,7 @@ export default function ProductPage({ slug, onBack, onGoCart }) {
   const { addItem } = useCart();
   const [p, setP] = useState(null);
 
-  const [qty, setQty] = useState(100);
+  const [qty, setQty] = useState(1);
   const [term, setTerm] = useState("Обычный");
   const [material, setMaterial] = useState("Стандарт");
   const [slideIndex, setSlideIndex] = useState(0);
