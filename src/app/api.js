@@ -90,55 +90,23 @@ const PRODUCT_SETTINGS = [
   },
 ];
 
-const CATEGORY_PRICING = {
-  poligrafiya: {
-    priceFrom: 1400,
-    tiers: [
-      { from: 1, to: 50, unitPrice: 35 },
-      { from: 51, to: 100, unitPrice: 22 },
-      { from: 101, to: 200, unitPrice: 16 },
-      { from: 201, to: 500, unitPrice: 12 },
-    ],
-  },
-  "banner-print": {
-    priceFrom: 3200,
-    tiers: [
-      { from: 1, to: 50, unitPrice: 3200 },
-      { from: 51, to: 100, unitPrice: 3000 },
-      { from: 101, to: 200, unitPrice: 2800 },
-      { from: 201, to: 500, unitPrice: 2500 },
-    ],
-  },
-  stamps: {
-    priceFrom: 1200,
-    tiers: [
-      { from: 1, to: 50, unitPrice: 1200 },
-      { from: 51, to: 100, unitPrice: 1100 },
-      { from: 101, to: 200, unitPrice: 980 },
-      { from: 201, to: 500, unitPrice: 880 },
-    ],
-  },
-  outdoor: {
-    priceFrom: 2600,
-    tiers: [
-      { from: 1, to: 50, unitPrice: 2600 },
-      { from: 51, to: 100, unitPrice: 2400 },
-      { from: 101, to: 200, unitPrice: 2200 },
-      { from: 201, to: 500, unitPrice: 2000 },
-    ],
-  },
-  business: {
-    priceFrom: 1600,
-    tiers: [
-      { from: 1, to: 50, unitPrice: 1600 },
-      { from: 51, to: 100, unitPrice: 1450 },
-      { from: 101, to: 200, unitPrice: 1300 },
-      { from: 201, to: 500, unitPrice: 1150 },
-    ],
-  },
-};
-
 const DEFAULT_SLIDES = ["/images/products/slide-1.svg", "/images/products/slide-2.svg", "/images/products/slide-3.svg"];
+
+function slugToBasePrice(slug) {
+  const source = String(slug || "default");
+  const hash = Array.from(source).reduce((acc, ch) => (acc * 31 + ch.charCodeAt(0)) % 10000, 0);
+  return 800 + hash;
+}
+
+function createDefaultTiers(baseUnitPrice) {
+  const base = Math.max(100, Number(baseUnitPrice || 1000));
+  return [
+    { from: 1, to: 50, unitPrice: Math.round(base) },
+    { from: 51, to: 100, unitPrice: Math.round(base * 0.92) },
+    { from: 101, to: 200, unitPrice: Math.round(base * 0.86) },
+    { from: 201, to: 500, unitPrice: Math.round(base * 0.8) },
+  ];
+}
 
 const RAW_PRODUCTS = [
   { title: "Визитки", slug: "vizitki-pechat", category: "poligrafiya", description: "Печать визиток — быстро и качественно для вашего бизнеса.", sourceUrl: "https://domline.ru/produkciya/vizitki-pechat" },
@@ -181,9 +149,10 @@ const SETTINGS_BY_SLUG = PRODUCT_SETTINGS.reduce((acc, item) => {
 }, {});
 
 function getPricingProfile(product) {
-  const category = CATEGORY_PRICING[product.category] || CATEGORY_PRICING.poligrafiya;
-  const custom = SETTINGS_BY_SLUG[product.slug]?.pricing;
-  const tiers = custom?.tiers || category.tiers;
+  const customSettings = SETTINGS_BY_SLUG[product.slug] || {};
+  const custom = customSettings.pricing;
+  const baseUnitPrice = Number(customSettings.priceFrom ?? custom?.tiers?.[0]?.unitPrice ?? slugToBasePrice(product.slug));
+  const tiers = custom?.tiers || createDefaultTiers(baseUnitPrice);
   return {
     tiers: Array.isArray(tiers) && tiers.length
       ? tiers.map((tier, index) => {
@@ -231,14 +200,18 @@ const PRODUCTS_BY_CATEGORY = RAW_PRODUCTS.reduce((acc, item, index) => {
   if (!acc[item.category]) acc[item.category] = [];
 
   const customSettings = SETTINGS_BY_SLUG[item.slug] || {};
-  const categoryPricing = CATEGORY_PRICING[item.category] || CATEGORY_PRICING.poligrafiya;
   const pricingProfile = getPricingProfile(item);
+  const minTier = pricingProfile.tiers.reduce((best, tier) => (tier.from < best.from ? tier : best), pricingProfile.tiers[0]);
+  const minQty = Math.max(1, Number(minTier?.from ?? 1));
+  const minBatchPrice = Math.round(minQty * Math.max(0, Number(minTier?.unitPrice ?? 0)));
 
   acc[item.category].push({
     id: index + 1,
     title: item.title,
     slug: item.slug,
-    priceFrom: Number(customSettings.priceFrom ?? categoryPricing.priceFrom ?? pricingProfile.tiers?.[0]?.unitPrice ?? 0),
+    priceFrom: minBatchPrice,
+    minQty,
+    minBatchPrice,
     pricingProfile,
     images: customSettings.images?.length ? customSettings.images : DEFAULT_SLIDES,
     description: item.description,
