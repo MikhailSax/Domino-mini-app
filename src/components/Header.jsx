@@ -9,19 +9,21 @@ export default function Header({
       <div className="max-w-md mx-auto px-4 pt-4 pb-3">
         <div className="glass-card p-3 shadow-lg">
           <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-2xl bg-white border border-black text-red-600 grid place-items-center font-semibold shadow-md">
-                D
-              </div>
-              <div>
-                <div className="text-base font-semibold leading-tight">Домино</div>
-                <div className="text-xs text-slate-400">Полиграфия • Улан-Удэ</div>
+            <div className="flex items-center gap-3 min-w-0">
+              <img
+                src="/images/domino-logo.svg"
+                alt="Домино рекламная группа"
+                className="h-10 w-auto object-contain shrink-0"
+              />
+              <div className="min-w-0">
+                <div className="text-base font-semibold leading-tight text-slate-900 truncate">Домино</div>
+                <div className="text-xs text-slate-500 truncate">Улан-Удэ • +7 (3012) 222-333</div>
               </div>
             </div>
 
             <div className="flex items-center gap-2">
               <button
-                className="relative btn-black px-4 py-2 text-sm"
+                className="relative btn-brand px-4 py-2 text-sm"
                 onClick={onCartClick}
                 aria-label="Корзина"
               >
