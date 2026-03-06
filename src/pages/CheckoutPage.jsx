@@ -4,8 +4,7 @@ import { useProfile } from "../app/ProfileContext.jsx";
 import { formatRUB } from "../app/ui.js";
 
 const TELEGRAM_ORDER_LINK = import.meta.env.VITE_TELEGRAM_ORDER_LINK || "https://t.me/share/url?url=https://domline.ru&text=";
-const TELEGRAM_BOT_TOKEN = import.meta.env.VITE_TELEGRAM_BOT_TOKEN;
-const TELEGRAM_CHAT_ID = import.meta.env.VITE_TELEGRAM_CHAT_ID;
+const TELEGRAM_ORDER_ENDPOINT = import.meta.env.VITE_TELEGRAM_ORDER_ENDPOINT;
 
 function normalizePhone(phone) {
   return String(phone || "").replace(/\D/g, "");
@@ -53,16 +52,18 @@ export default function CheckoutPage({ onBack, onDone }) {
 
     const telegramText = buildTelegramText({ profile, items, total });
 
-    if (TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID) {
+    if (TELEGRAM_ORDER_ENDPOINT) {
       setIsSubmitting(true);
       try {
-        const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+        const response = await fetch(TELEGRAM_ORDER_ENDPOINT, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            chat_id: TELEGRAM_CHAT_ID,
+            profile,
+            items,
+            total,
             text: telegramText,
           }),
         });
