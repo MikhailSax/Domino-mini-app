@@ -8,7 +8,11 @@ export const TOP_CATEGORIES = [
   { id: "business", title: "Для вашего бизнеса" },
 ];
 
-const DEFAULT_SLIDES = ["/images/products/slide-1.svg", "/images/products/slide-2.svg", "/images/products/slide-3.svg"];
+const DEFAULT_SLIDES = [
+  "/images/products/slide-1.svg",
+  "/images/products/slide-2.svg",
+  "/images/products/slide-3.svg",
+];
 
 const DEFAULT_CHARACTERISTICS = {
   material: "",
@@ -29,19 +33,8 @@ const DEFAULT_TERMS = {
   "Срочно": 1.3,
 };
 
-function createDefaultTiers(baseUnitPrice) {
-  const base = Math.max(100, Number(baseUnitPrice || 1000));
-  return [
-    { from: 1, to: 50, unitPrice: Math.round(base) },
-    { from: 51, to: 100, unitPrice: Math.round(base * 0.92) },
-    { from: 101, to: 200, unitPrice: Math.round(base * 0.86) },
-    { from: 201, to: 500, unitPrice: Math.round(base * 0.8) },
-  ];
-}
-
-// 👇 Единственный массив товаров для ручного редактирования перед релизом.
-// Для каждого товара можно заполнить: размеры, цену, изображения, характеристики и калькуляцию.
-const PRODUCTS = [
+// Главный массив товаров
+export const PRODUCTS = [
   { title: "Визитки", slug: "vizitki-pechat", category: "poligrafiya", description: "Печать визиток — быстро и качественно для вашего бизнеса.", priceFrom: 262, sourceUrl: "https://domline.ru/produkciya/vizitki-pechat", sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS, calculation: { tiers: [{ from: 1, to: 50, unitPrice: 30 }, { from: 51, to: 100, unitPrice: 20 }, { from: 101, to: 200, unitPrice: 15 }, { from: 201, to: 500, unitPrice: 12 }], materials: DEFAULT_MATERIALS, terms: DEFAULT_TERMS } },
   { title: "Листовки", slug: "listovki-pechat", category: "poligrafiya", description: "Печать рекламных листовок для акций, событий и промо-кампаний.", priceFrom: 1995, sourceUrl: "https://domline.ru/produkciya/listovki-pechat", sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS, calculation: { tiers: [{ from: 1, to: 50, unitPrice: 45 }, { from: 51, to: 100, unitPrice: 30 }, { from: 101, to: 200, unitPrice: 22 }, { from: 201, to: 500, unitPrice: 18 }], materials: DEFAULT_MATERIALS, terms: DEFAULT_TERMS } },
   { title: "Буклеты", slug: "buklety-pechat", category: "poligrafiya", description: "Печать буклетов для презентации услуг и товаров.", priceFrom: 2037, sourceUrl: "https://domline.ru/produkciya/buklety-pechat", sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS },
@@ -72,12 +65,14 @@ const PRODUCTS = [
   { title: "Пакет ПВД", slug: "paket-pvd", category: "business", description: "ПВД пакеты с нанесением логотипа.", priceFrom: 6300, sourceUrl: "https://domline.ru/produkciya/paket-pvd", sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS },
 ];
 
-function normalizeTiers(tiers, basePrice) {
-  const source = Array.isArray(tiers) && tiers.length ? tiers : createDefaultTiers(basePrice);
+function normalizeTiers(tiers = [], basePrice = 1000) {
+  if (!Array.isArray(tiers) || tiers.length === 0) {
+    return [{ from: 1, to: Number.MAX_SAFE_INTEGER, unitPrice: basePrice }];
+  }
 
-  return source.map((tier, index) => {
+  return tiers.map((tier, index) => {
     const from = Math.max(1, Number(tier.from ?? 1));
-    const nextFrom = Number(source[index + 1]?.from);
+    const nextFrom = Number(tiers[index + 1]?.from);
     const fallbackTo = Number.isFinite(nextFrom) ? nextFrom - 1 : Number.MAX_SAFE_INTEGER;
     const to = Math.max(from, Number(tier.to ?? fallbackTo));
 
@@ -120,9 +115,9 @@ function toPublicProduct(item, index) {
 
 export function calculateProductPrice({ qty, material, term, pricingProfile }) {
   const safeQty = Math.max(1, Number(qty || 1));
-  const profile = pricingProfile || { tiers: createDefaultTiers(1000), materials: DEFAULT_MATERIALS, terms: DEFAULT_TERMS };
+  const profile = pricingProfile || { tiers: [{ from: 1, to: Number.MAX_SAFE_INTEGER, unitPrice: 1000 }], materials: DEFAULT_MATERIALS, terms: DEFAULT_TERMS };
 
-  const tiers = normalizeTiers(profile.tiers, 1000);
+  const tiers = normalizeTiers(profile.tiers);
   const activeTier = tiers.find((tier) => safeQty >= tier.from && safeQty <= tier.to) || tiers[tiers.length - 1];
   const subtotal = safeQty * Math.max(0, Number(activeTier?.unitPrice || 0));
 
@@ -172,8 +167,3 @@ export const api = {
 
     const all = Object.values(PRODUCTS_BY_CATEGORY).flat();
     const product = all.find((x) => x.slug === slug);
-    const profile = pricingProfile || product?.pricingProfile;
-
-    return calculateProductPrice({ qty, material, term, pricingProfile: profile });
-  },
-};
