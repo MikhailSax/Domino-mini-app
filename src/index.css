@@ -5,6 +5,8 @@
 :root {
   color-scheme: light;
   --bottom-nav-h: 88px; /* высота нижней навигации */
+  --brand-red: #e52d2d;
+  --brand-red-dark: #c92121;
 }
 
 body {
@@ -24,6 +26,16 @@ body {
 
 .btn-black {
   @apply bg-black text-white border border-black rounded-2xl active:scale-[0.99] transition shadow-[0_8px_24px_rgba(0,0,0,0.15)];
+}
+
+.btn-brand {
+  @apply text-white border rounded-2xl active:scale-[0.99] transition shadow-[0_8px_24px_rgba(229,45,45,0.28)];
+  background-color: var(--brand-red);
+  border-color: var(--brand-red-dark);
+}
+
+.btn-brand:hover {
+  background-color: var(--brand-red-dark);
 }
 
 .btn-ghost {

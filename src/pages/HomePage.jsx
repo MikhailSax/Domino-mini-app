@@ -65,7 +65,7 @@ function ServiceChecklist() {
           <div className="mt-3 flex flex-wrap gap-2">
             <button
               type="button"
-              className="px-4 py-2 text-sm font-semibold btn-black"
+              className="px-4 py-2 text-sm font-semibold btn-brand"
               onClick={() => window?.open?.("https://t.me/domino_manager", "_blank", "noopener,noreferrer")}
             >
               Нужна помощь с заказом
@@ -128,12 +128,13 @@ export default function HomePage({ onOpenProduct }) {
         onChange={(id) => setTop(id)}
       />
 
-      <div className="mt-4 glass-card p-5 bg-gradient-to-br from-white to-slate-50 text-slate-900 shadow-xl overflow-hidden relative">
-        <div className="absolute inset-0 opacity-35 bg-[radial-gradient(circle_at_20%_20%,rgba(15,23,42,0.05),transparent_35%),radial-gradient(circle_at_80%_30%,rgba(15,23,42,0.04),transparent_40%)]" />
+      <div className="mt-4 glass-card p-5 bg-gradient-to-br from-white via-rose-50 to-red-50 text-slate-900 shadow-xl overflow-hidden relative">
+        <div className="absolute inset-0 opacity-35 bg-[radial-gradient(circle_at_20%_20%,rgba(229,45,45,0.12),transparent_35%),radial-gradient(circle_at_80%_30%,rgba(15,23,42,0.04),transparent_40%)]" />
         <div className="relative">
           <div className="text-xs uppercase tracking-wide text-slate-500">{topTitle}</div>
-          <div className="text-2xl font-semibold mt-1 leading-tight">Создай идеальный тираж</div>
+          <div className="text-2xl font-semibold mt-1 leading-tight">Создайте идеальный тираж</div>
           <div className="text-sm text-slate-600 mt-2">Выбирайте продукцию, настраивайте параметры и отправляйте заказ менеджеру в Telegram.</div>
+          <div className="mt-3 text-xs text-slate-500">г. Улан-Удэ • Пн–Пт 09:00–18:00</div>
         </div>
       </div>
 
