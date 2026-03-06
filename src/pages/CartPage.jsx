@@ -74,7 +74,7 @@ export default function CartPage({ onBack, onCheckout }) {
                         </div>
 
                         <div className="mt-2 text-[11px] text-black">
-                            Цена сейчас считается демо-логикой. Потом заменим на REST.
+                            Цена рассчитывается внутри приложения без бэкенда.
                         </div>
                     </div>
                 ))}

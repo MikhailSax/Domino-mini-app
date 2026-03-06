@@ -133,7 +133,7 @@ export default function HomePage({ onOpenProduct }) {
         <div className="relative">
           <div className="text-xs uppercase tracking-wide text-slate-500">{topTitle}</div>
           <div className="text-2xl font-semibold mt-1 leading-tight">Создай идеальный тираж</div>
-          <div className="text-sm text-slate-600 mt-2">Конфигуратор, загрузка макета и проверка в одном клике.</div>
+          <div className="text-sm text-slate-600 mt-2">Минималистичный выбор параметров и быстрый заказ в Telegram.</div>
 
           <div className="mt-4 grid grid-cols-2 gap-2">
             <button
