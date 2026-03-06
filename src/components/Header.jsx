@@ -16,7 +16,7 @@ export default function Header({
                 className="h-10 w-auto object-contain shrink-0"
               />
               <div className="min-w-0">
-                <div className="text-base font-semibold leading-tight text-slate-900 truncate">Домино</div>
+                <div className="text-base font-semibold leading-tight text-red-600 truncate">Домино</div>
                 <div className="text-xs text-slate-500 truncate">Улан-Удэ • +7 (3012) 222-333</div>
               </div>
             </div>
