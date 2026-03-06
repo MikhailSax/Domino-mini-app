@@ -42,6 +42,15 @@ function buildTelegramText({ profile, items, total }) {
   return lines.join("\n");
 }
 
+function getProfileFullName(profile) {
+  const fullName = [profile?.name, profile?.lastName]
+    .map((part) => String(part || "").trim())
+    .filter(Boolean)
+    .join(" ");
+
+  return fullName || "Не указано";
+}
+
 export default function CheckoutPage({ onBack, onDone }) {
   const { items, clear } = useCart();
   const { profile, setField } = useProfile();
@@ -51,6 +60,10 @@ export default function CheckoutPage({ onBack, onDone }) {
 
   const total = useMemo(
     () => items.reduce((s, it) => s + Number(it.price || 0), 0),
+    [items]
+  );
+  const totalQty = useMemo(
+    () => items.reduce((sum, it) => sum + Number(it.qty || 0), 0),
     [items]
   );
 
@@ -207,6 +220,60 @@ export default function CheckoutPage({ onBack, onDone }) {
             value={profile.comment || ""}
             onChange={(e) => setField("comment", e.target.value)}
           />
+        </div>
+      </div>
+
+      <div className="mt-3 bg-white rounded-3xl p-4 shadow-sm border border-slate-200">
+        <div className="text-sm font-semibold">Состав заказа</div>
+
+        <div className="mt-3 space-y-2">
+          {items.length === 0 ? (
+            <div className="rounded-2xl border border-dashed border-slate-300 px-3 py-2 text-xs text-slate-500">
+              Корзина пуста. Добавьте товары, чтобы оформить заказ.
+            </div>
+          ) : (
+            items.map((item, index) => (
+              <div
+                key={`${item.id || item.slug || item.title}-${index}`}
+                className="rounded-2xl border border-slate-200 px-3 py-3"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <div className="text-sm font-medium text-slate-900">{item.title}</div>
+                    <div className="mt-1 text-xs text-slate-500">
+                      Тираж: {item.qty || 0} шт.
+                    </div>
+                  </div>
+                  <div className="text-sm font-semibold text-slate-900">
+                    {formatRUB(item.price || 0)}
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        <div className="mt-3 grid grid-cols-2 gap-2 text-xs text-slate-600">
+          <div className="rounded-2xl bg-slate-50 border border-slate-200 px-3 py-2">
+            Позиций: <span className="font-semibold text-slate-900">{items.length}</span>
+          </div>
+          <div className="rounded-2xl bg-slate-50 border border-slate-200 px-3 py-2">
+            Суммарный тираж: <span className="font-semibold text-slate-900">{totalQty}</span>
+          </div>
+        </div>
+
+        <div className="mt-3 rounded-2xl bg-slate-50 border border-slate-200 px-3 py-3 text-xs text-slate-700 space-y-1">
+          <div>
+            Получатель: <span className="font-semibold text-slate-900">{getProfileFullName(profile)}</span>
+          </div>
+          <div>
+            Телефон: <span className="font-semibold text-slate-900">{profile.phone?.trim() || "Не указан"}</span>
+          </div>
+          {profile.comment?.trim() ? (
+            <div>
+              Комментарий: <span className="text-slate-900">{profile.comment.trim()}</span>
+            </div>
+          ) : null}
         </div>
       </div>
 
