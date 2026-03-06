@@ -3,24 +3,20 @@ import Header from "../components/Header.jsx";
 import Navigation from "../components/Navigation.jsx";
 
 import { CartProvider, useCart } from "../app/CartContext.jsx";
-import { OrdersProvider } from "../app/OrdersContext.jsx";
 import { ProfileProvider } from "../app/ProfileContext.jsx";
-import { AuthProvider, useAuth } from "../app/AuthContext.jsx";
+import { AuthProvider } from "../app/AuthContext.jsx";
 
 import HomePage from "./HomePage.jsx";
 import CatalogPage from "./CatalogPage.jsx";
 import ProductPage from "./ProductPage.jsx";
 import CartPage from "./CartPage.jsx";
 import CheckoutPage from "./CheckoutPage.jsx";
-import OrdersPage from "./OrdersPage.jsx";
-import ProfilePage from "./ProfilePage.jsx";
 
 function ShellInner() {
   const [route, setRoute] = useState({ name: "home" });
-  // home | catalog | orders | profile | product | cart | checkout
+  // home | catalog | product | cart | checkout
 
   const { items } = useCart();
-  const { status, error, user } = useAuth();
   const cartCount = useMemo(() => items.length, [items]);
 
   const openProduct = (slug) => setRoute({ name: "product", slug });
@@ -34,9 +30,6 @@ function ShellInner() {
       <Header
         cartCount={cartCount}
         onCartClick={openCart}
-        authStatus={status}
-        authError={error}
-        userLabel={user?.username || user?.firstName || user?.id || "пользователь"}
       />
 
       {screen === "home" && <HomePage onOpenProduct={openProduct} />}
@@ -61,13 +54,9 @@ function ShellInner() {
       {screen === "checkout" && (
         <CheckoutPage
           onBack={openCart}
-          onDone={() => setRoute({ name: "orders" })}
+          onDone={() => setRoute({ name: "home" })}
         />
       )}
-
-      {screen === "orders" && <OrdersPage />}
-
-      {screen === "profile" && <ProfilePage />}
 
       <Navigation
         active={
@@ -85,11 +74,9 @@ export default function Shell() {
   return (
     <AuthProvider>
       <ProfileProvider>
-        <OrdersProvider>
-          <CartProvider>
-            <ShellInner />
-          </CartProvider>
-        </OrdersProvider>
+        <CartProvider>
+          <ShellInner />
+        </CartProvider>
       </ProfileProvider>
     </AuthProvider>
   );

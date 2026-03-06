@@ -1,23 +1,8 @@
 import React from "react";
 
-function AuthBadge({ authStatus, userLabel }) {
-  if (authStatus === "loading") {
-    return <div className="text-[11px] text-slate-500">Авторизация…</div>;
-  }
-
-  if (authStatus === "authenticated") {
-    return <div className="text-[11px] text-emerald-600">Telegram: {userLabel}</div>;
-  }
-
-  return <div className="text-[11px] text-amber-600">Без Telegram-авторизации</div>;
-}
-
 export default function Header({
   cartCount = 0,
   onCartClick,
-  authStatus = "idle",
-  authError = "",
-  userLabel = "",
 }) {
   return (
     <div className="sticky top-0 z-50 bg-white/90 backdrop-blur-xl border-b border-slate-200 shadow-sm">
@@ -31,7 +16,6 @@ export default function Header({
               <div>
                 <div className="text-base font-semibold leading-tight">Домино</div>
                 <div className="text-xs text-slate-400">Полиграфия • Улан-Удэ</div>
-                <AuthBadge authStatus={authStatus} userLabel={userLabel} />
               </div>
             </div>
 
@@ -50,8 +34,6 @@ export default function Header({
               </button>
             </div>
           </div>
-
-          {authError && <div className="mt-2 text-xs text-rose-600">{authError}</div>}
         </div>
       </div>
     </div>

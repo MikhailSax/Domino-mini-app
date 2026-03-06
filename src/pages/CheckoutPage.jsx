@@ -1,6 +1,5 @@
 import React, { useMemo } from "react";
 import { useCart } from "../app/CartContext.jsx";
-import { useOrders } from "../app/OrdersContext.jsx";
 import { useProfile } from "../app/ProfileContext.jsx";
 import { formatRUB } from "../app/ui.js";
 
@@ -25,26 +24,12 @@ function buildTelegramText({ profile, items, total }) {
 
 export default function CheckoutPage({ onBack, onDone }) {
   const { items, clear } = useCart();
-  const { addOrder } = useOrders();
   const { profile, setField } = useProfile();
 
   const total = useMemo(() => items.reduce((s, it) => s + Number(it.price || 0), 0), [items]);
   const disabled = items.length === 0;
 
   const submitOrder = () => {
-    const payload = {
-      customer: {
-        name: profile.name || "",
-        lastName: profile.lastName || "",
-        phone: profile.phone || "",
-        address: profile.address || "",
-      },
-      items,
-      total,
-    };
-
-    addOrder(payload);
-
     const telegramText = buildTelegramText({ profile, items, total });
     const baseLink = TELEGRAM_ORDER_LINK.includes("text=")
       ? TELEGRAM_ORDER_LINK
@@ -67,7 +52,7 @@ export default function CheckoutPage({ onBack, onDone }) {
       <div className="mt-3 rounded-3xl bg-white text-black p-5 shadow-sm border border-slate-200">
         <div className="text-sm opacity-80">Оформление</div>
         <div className="text-2xl font-semibold mt-1 leading-tight">Данные заказа</div>
-        <div className="text-xs opacity-70 mt-2 text-black">Статичное приложение: после подтверждения откроем Telegram с готовым текстом заказа.</div>
+        <div className="text-xs opacity-70 mt-2 text-black">Проверьте контакты и отправьте заказ менеджеру в Telegram.</div>
       </div>
 
       <div className="mt-3 bg-white rounded-3xl p-4 shadow-sm border border-slate-200">

@@ -36,55 +36,9 @@ const GridIcon = ({ className = "" }) => (
   </svg>
 );
 
-const OrdersIcon = ({ className = "" }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.5"
-    className={`${iconClass} ${className}`}
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M7.5 4.75h9A1.75 1.75 0 0 1 18.25 6.5v10.25a1.5 1.5 0 0 1-1.5 1.5H7.25a1.5 1.5 0 0 1-1.5-1.5V6.5A1.75 1.75 0 0 1 7.5 4.75z"
-    />
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M9.75 3.5v2.25m4.5-2.25v2.25M8.75 10.25h6.5m-6.5 3h4"
-    />
-  </svg>
-);
-
-const ProfileIcon = ({ className = "" }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.5"
-    className={`${iconClass} ${className}`}
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M15.75 8.25a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0z"
-    />
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M6.5 18.25a5.75 5.75 0 0 1 11.5 0"
-    />
-  </svg>
-);
-
 const NAV_ITEMS = [
   { id: "home", title: "Главная", Icon: HomeIcon },
   { id: "catalog", title: "Каталог", Icon: GridIcon },
-  { id: "orders", title: "Заказы", Icon: OrdersIcon },
-  { id: "profile", title: "Профиль", Icon: ProfileIcon },
 ];
 
 export default function Navigation({ active = "home", onNav }) {
@@ -97,7 +51,7 @@ export default function Navigation({ active = "home", onNav }) {
     alert(`Раздел: ${title}`);
   };
 
-  const Item = ({ id, Icon, title }) => {
+  const Item = ({ id, Icon: ItemIcon, title }) => {
     const isActive = active === id;
     return (
       <button
@@ -116,7 +70,7 @@ export default function Navigation({ active = "home", onNav }) {
           }
         }}
       >
-        <Icon className={isActive ? "text-white" : "text-slate-500"} />
+        <ItemIcon className={isActive ? "text-white" : "text-slate-500"} />
         <div className="leading-none">{title}</div>
       </button>
     );
@@ -125,7 +79,7 @@ export default function Navigation({ active = "home", onNav }) {
   return (
     <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-xl border-t border-slate-200 shadow-[0_-6px_24px_rgba(0,0,0,0.06)]">
       <div className="max-w-md mx-auto p-4">
-        <div className="grid grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 gap-3">
           {NAV_ITEMS.map((item) => (
             <Item key={item.id} {...item} />
           ))}

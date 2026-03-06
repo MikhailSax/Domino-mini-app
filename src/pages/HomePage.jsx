@@ -42,7 +42,7 @@ function ProductRow({ item, onClick }) {
   );
 }
 
-function ServiceChecklist({ onNeedHelp }) {
+function ServiceChecklist() {
   const items = [
     "Менеджер подключится и проверит макет перед печатью",
     "Уточним доставку: самовывоз, курьер или выдача в пункте",
@@ -66,7 +66,7 @@ function ServiceChecklist({ onNeedHelp }) {
             <button
               type="button"
               className="px-4 py-2 text-sm font-semibold btn-black"
-              onClick={onNeedHelp}
+              onClick={() => window?.open?.("https://t.me/domino_manager", "_blank", "noopener,noreferrer")}
             >
               Нужна помощь с заказом
             </button>
@@ -133,26 +133,11 @@ export default function HomePage({ onOpenProduct }) {
         <div className="relative">
           <div className="text-xs uppercase tracking-wide text-slate-500">{topTitle}</div>
           <div className="text-2xl font-semibold mt-1 leading-tight">Создай идеальный тираж</div>
-          <div className="text-sm text-slate-600 mt-2">Минималистичный выбор параметров и быстрый заказ в Telegram.</div>
-
-          <div className="mt-4 grid grid-cols-2 gap-2">
-            <button
-              className="btn-black px-4 py-2 text-sm font-semibold"
-              onClick={() => alert("Позже: промокоды")}
-            >
-              Промокод
-            </button>
-            <button
-              className="btn-ghost px-4 py-2 text-sm font-semibold"
-              onClick={() => alert("Позже: консультация")}
-            >
-              Консультация
-            </button>
-          </div>
+          <div className="text-sm text-slate-600 mt-2">Выбирайте продукцию, настраивайте параметры и отправляйте заказ менеджеру в Telegram.</div>
         </div>
       </div>
 
-      <ServiceChecklist onNeedHelp={() => alert("Менеджер свяжется с вами для уточнения деталей.")} />
+      <ServiceChecklist />
 
       <div className="mt-4 space-y-2">
         {loading && (
