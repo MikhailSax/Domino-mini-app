@@ -1,9 +1,12 @@
 import React, { useMemo, useState } from "react";
 import { useCart } from "../app/CartContext.jsx";
 import { useProfile } from "../app/ProfileContext.jsx";
+import { useAuth } from "../app/AuthContext.jsx";
 import { formatRUB } from "../app/ui.js";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
 const TELEGRAM_ORDER_LINK = import.meta.env.VITE_TELEGRAM_ORDER_LINK || "https://t.me/share/url?url=https://domline.ru&text=";
+const TELEGRAM_ORDER_ENDPOINT = import.meta.env.VITE_TELEGRAM_ORDER_ENDPOINT || (API_BASE_URL ? `${API_BASE_URL}/orders/telegram` : "");
 const TELEGRAM_BOT_TOKEN = import.meta.env.VITE_TELEGRAM_BOT_TOKEN;
 const TELEGRAM_CHAT_ID = import.meta.env.VITE_TELEGRAM_CHAT_ID;
 
@@ -37,6 +40,7 @@ function buildTelegramText({ profile, items, total }) {
 export default function CheckoutPage({ onBack, onDone }) {
   const { items, clear } = useCart();
   const { profile, setField } = useProfile();
+  const { user } = useAuth();
   const [submitError, setSubmitError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -53,6 +57,47 @@ export default function CheckoutPage({ onBack, onDone }) {
 
     const telegramText = buildTelegramText({ profile, items, total });
 
+    if (TELEGRAM_ORDER_ENDPOINT) {
+      setIsSubmitting(true);
+      try {
+        const response = await fetch(TELEGRAM_ORDER_ENDPOINT, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            source: "telegram-mini-app",
+            telegramUser: user
+              ? {
+                  id: user.id,
+                  username: user.username,
+                  firstName: user.firstName,
+                  lastName: user.lastName,
+                }
+              : null,
+            profile,
+            items,
+            total,
+            text: telegramText,
+          }),
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`Order endpoint error: ${response.status} ${errorText}`.trim());
+        }
+
+        clear();
+        onDone?.();
+      } catch {
+        setSubmitError("Не удалось отправить заказ в Telegram-бота. Попробуйте снова.");
+      } finally {
+        setIsSubmitting(false);
+      }
+
+      return;
+    }
+
     if (TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID) {
       setIsSubmitting(true);
       try {
@@ -68,7 +113,8 @@ export default function CheckoutPage({ onBack, onDone }) {
         });
 
         if (!response.ok) {
-          throw new Error(`Telegram API error: ${response.status}`);
+          const errorText = await response.text();
+          throw new Error(`Telegram API error: ${response.status} ${errorText}`.trim());
         }
 
         clear();
