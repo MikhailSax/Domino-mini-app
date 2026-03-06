@@ -88,17 +88,33 @@ const NAV_ITEMS = [
 ];
 
 export default function Navigation({ active = "home", onNav }) {
+  const handleNav = (id, title) => {
+    if (onNav) {
+      onNav(id);
+      return;
+    }
+
+    alert(`Раздел: ${title}`);
+  };
+
   const Item = ({ id, Icon, title }) => {
     const isActive = active === id;
     return (
       <button
+        type="button"
         className={
           "flex flex-col items-center gap-1 py-2 rounded-2xl border text-[11px] font-semibold transition active:scale-[0.98] " +
           (isActive
             ? "bg-slate-900 text-white border-slate-900 shadow-[0_8px_24px_rgba(15,23,42,0.3)]"
             : "bg-white text-slate-700 border-slate-200 hover:border-slate-300 hover:text-slate-900 shadow-sm")
         }
-        onClick={() => (onNav ? onNav(id) : alert(`Раздел: ${title}`))}
+        onPointerUp={() => handleNav(id, title)}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            handleNav(id, title);
+          }
+        }}
       >
         <Icon className={isActive ? "text-white" : "text-slate-500"} />
         <div className="leading-none">{title}</div>
