@@ -10,6 +10,45 @@ export const TOP_CATEGORIES = [
   { id: "business", title: "Для вашего бизнеса" },
 ];
 
+// 👇 Основной массив для редактирования цен и фото товаров.
+// Можно менять priceFrom, pricing и images под актуальный прайс/контент.
+const PRODUCT_SETTINGS = [
+  {
+    slug: "vizitki-pechat",
+    priceFrom: 1500,
+    pricing: { baseQty: 100, basePrice: 1500, extraUnitPrice: 8 },
+    images: ["/images/products/slide-1.svg", "/images/products/slide-2.svg", "/images/products/slide-3.svg"],
+  },
+  {
+    slug: "listovki-pechat",
+    priceFrom: 2100,
+    pricing: { baseQty: 100, basePrice: 2100, extraUnitPrice: 12 },
+    images: ["/images/products/slide-2.svg", "/images/products/slide-3.svg", "/images/products/slide-1.svg"],
+  },
+  {
+    slug: "pechat-bannera",
+    priceFrom: 3200,
+    pricing: { baseQty: 1, basePrice: 3200, extraUnitPrice: 950 },
+    images: ["/images/products/slide-3.svg", "/images/products/slide-1.svg", "/images/products/slide-2.svg"],
+  },
+  {
+    slug: "pechati",
+    priceFrom: 1300,
+    pricing: { baseQty: 1, basePrice: 1300, extraUnitPrice: 450 },
+    images: ["/images/products/slide-1.svg", "/images/products/slide-2.svg", "/images/products/slide-3.svg"],
+  },
+];
+
+const CATEGORY_PRICING = {
+  poligrafiya: { priceFrom: 1400, baseQty: 100, basePrice: 1400, extraUnitPrice: 8 },
+  "banner-print": { priceFrom: 3200, baseQty: 1, basePrice: 3200, extraUnitPrice: 920 },
+  stamps: { priceFrom: 1200, baseQty: 1, basePrice: 1200, extraUnitPrice: 420 },
+  outdoor: { priceFrom: 2600, baseQty: 1, basePrice: 2600, extraUnitPrice: 780 },
+  business: { priceFrom: 1600, baseQty: 50, basePrice: 1600, extraUnitPrice: 20 },
+};
+
+const DEFAULT_SLIDES = ["/images/products/slide-1.svg", "/images/products/slide-2.svg", "/images/products/slide-3.svg"];
+
 const RAW_PRODUCTS = [
   { title: "Визитки", slug: "vizitki-pechat", category: "poligrafiya", description: "Печать визиток — быстро и качественно для вашего бизнеса.", sourceUrl: "https://domline.ru/produkciya/vizitki-pechat" },
   { title: "Визитки с ламинацией", slug: "vizitki-pechat-s-laminaciei", category: "poligrafiya", description: "Визитки с дополнительной ламинацией для более презентабельного вида и защиты.", sourceUrl: "https://domline.ru/produkciya/vizitki-pechat-s-laminaciei" },
@@ -48,13 +87,52 @@ const RAW_PRODUCTS = [
   { title: "Пакет ПВД", slug: "paket-pvd", category: "business", description: "ПВД пакеты с нанесением логотипа.", sourceUrl: "https://domline.ru/produkciya/paket-pvd" },
 ];
 
+const SETTINGS_BY_SLUG = PRODUCT_SETTINGS.reduce((acc, item) => {
+  acc[item.slug] = item;
+  return acc;
+}, {});
+
+function getPricingProfile(product) {
+  const category = CATEGORY_PRICING[product.category] || CATEGORY_PRICING.poligrafiya;
+  const custom = SETTINGS_BY_SLUG[product.slug]?.pricing;
+  return {
+    baseQty: Number(custom?.baseQty ?? category.baseQty ?? 100),
+    basePrice: Number(custom?.basePrice ?? category.basePrice ?? 1000),
+    extraUnitPrice: Number(custom?.extraUnitPrice ?? category.extraUnitPrice ?? 10),
+  };
+}
+
+export function calculateProductPrice({ qty, material, term, pricingProfile }) {
+  const safeQty = Math.max(1, Number(qty || 1));
+  const profile = pricingProfile || { baseQty: 100, basePrice: 1000, extraUnitPrice: 10 };
+
+  const baseQty = Math.max(1, Number(profile.baseQty || 100));
+  const basePrice = Math.max(0, Number(profile.basePrice || 1000));
+  const extraUnitPrice = Math.max(0, Number(profile.extraUnitPrice || 10));
+
+  const extraQty = Math.max(0, safeQty - baseQty);
+  const subtotal = basePrice + extraQty * extraUnitPrice;
+
+  const kTerm = term === "Срочно" ? 1.3 : 1;
+  const kMat = material === "Премиум" ? 1.25 : material === "Плотнее" ? 1.12 : 1;
+
+  return Math.round(subtotal * kTerm * kMat);
+}
+
 const PRODUCTS_BY_CATEGORY = RAW_PRODUCTS.reduce((acc, item, index) => {
   if (!acc[item.category]) acc[item.category] = [];
+
+  const customSettings = SETTINGS_BY_SLUG[item.slug] || {};
+  const categoryPricing = CATEGORY_PRICING[item.category] || CATEGORY_PRICING.poligrafiya;
+  const pricingProfile = getPricingProfile(item);
+
   acc[item.category].push({
     id: index + 1,
     title: item.title,
     slug: item.slug,
-    priceFrom: 900,
+    priceFrom: Number(customSettings.priceFrom ?? categoryPricing.priceFrom ?? pricingProfile.basePrice),
+    pricingProfile,
+    images: customSettings.images?.length ? customSettings.images : DEFAULT_SLIDES,
     description: item.description,
     sourceUrl: item.sourceUrl,
   });
@@ -93,12 +171,13 @@ export const api = {
     }
   },
 
-  async estimatePrice({ slug, qty, material, term, priceFrom }) {
+  async estimatePrice({ slug, qty, material, term, priceFrom, pricingProfile }) {
     await sleep(50);
-    const base = Number(priceFrom || (slug?.includes("banner") ? 8000 : 900));
-    const kQty = Math.max(1, Number(qty || 1) / 100);
-    const kTerm = term === "Срочно" ? 1.3 : 1;
-    const kMat = material === "Премиум" ? 1.25 : material === "Плотнее" ? 1.12 : 1;
-    return Math.round(base * kQty * kTerm * kMat);
+
+    const all = Object.values(PRODUCTS_BY_CATEGORY).flat();
+    const p = all.find((x) => x.slug === slug);
+    const profile = pricingProfile || p?.pricingProfile || { baseQty: 100, basePrice: Number(priceFrom || 1000), extraUnitPrice: 10 };
+
+    return calculateProductPrice({ qty, material, term, pricingProfile: profile });
   },
 };
