@@ -5,10 +5,6 @@ import { useAuth } from "../app/AuthContext.jsx";
 import { formatRUB } from "../app/ui.js";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
-const TELEGRAM_ORDER_LINK =
-  import.meta.env.VITE_TELEGRAM_ORDER_LINK ||
-  "https://t.me/share/url?url=https://domline.ru&text=";
-
 const TELEGRAM_ORDER_ENDPOINT =
   import.meta.env.VITE_TELEGRAM_ORDER_ENDPOINT ||
   (API_BASE_URL ? `${API_BASE_URL}/orders/telegram` : "");
@@ -115,18 +111,47 @@ export default function CheckoutPage({ onBack, onDone }) {
       return;
     }
 
-    const baseLink = TELEGRAM_ORDER_LINK.includes("text=")
-      ? TELEGRAM_ORDER_LINK
-      : `${TELEGRAM_ORDER_LINK}${
-          TELEGRAM_ORDER_LINK.includes("?") ? "&" : "?"
-        }text=`;
+    if (TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID) {
+      setIsSubmitting(true);
 
-    const telegramUrl = `${baseLink}${encodeURIComponent(telegramText)}`;
+      try {
+        const response = await fetch(
+          `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              chat_id: TELEGRAM_CHAT_ID,
+              text: telegramText,
+            }),
+          }
+        );
 
-    window.open(telegramUrl, "_blank", "noopener,noreferrer");
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(
+            `Telegram Bot API error: ${response.status} ${errorText}`.trim()
+          );
+        }
 
-    clear();
-    onDone?.();
+        clear();
+        onDone?.();
+      } catch {
+        setSubmitError(
+          "Не удалось отправить заказ в Telegram-бота. Попробуйте снова."
+        );
+      } finally {
+        setIsSubmitting(false);
+      }
+
+      return;
+    }
+
+    setSubmitError(
+      "Не настроена автоматическая отправка заказа. Укажите VITE_TELEGRAM_ORDER_ENDPOINT или пару VITE_TELEGRAM_BOT_TOKEN/VITE_TELEGRAM_CHAT_ID."
+    );
   };
 
   return (
@@ -146,7 +171,7 @@ export default function CheckoutPage({ onBack, onDone }) {
           Данные заказа
         </div>
         <div className="text-xs opacity-70 mt-2 text-black">
-          Проверьте контакты и отправьте заказ менеджеру в Telegram.
+          Проверьте контакты и отправьте заказ. Он будет отправлен в Telegram автоматически.
         </div>
       </div>
 
@@ -206,7 +231,7 @@ export default function CheckoutPage({ onBack, onDone }) {
           disabled={disabled}
           onClick={submitOrder}
         >
-          {isSubmitting ? "Отправка..." : "Отправить заказ в Telegram"}
+          {isSubmitting ? "Отправка..." : "Оформить заказ"}
         </button>
       </div>
     </div>

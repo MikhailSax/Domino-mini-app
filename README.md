@@ -26,7 +26,7 @@ VITE_TELEGRAM_CHAT_ID=123456789
 > Логика отправки заказа:
 > 1. Если задан `VITE_TELEGRAM_ORDER_ENDPOINT` (или доступен `${VITE_API_BASE_URL}/orders/telegram`) — отправка на endpoint.
 > 2. Иначе, если заданы `VITE_TELEGRAM_BOT_TOKEN` + `VITE_TELEGRAM_CHAT_ID` — прямая отправка в Telegram Bot API (`sendMessage`).
-> 3. Иначе используется `VITE_TELEGRAM_ORDER_LINK` для ручной отправки.
+> 3. Иначе кнопка оформления покажет ошибку о ненастроенной автоматической отправке.
 
 > ⚠️ Прямая отправка из frontend раскрывает токен бота в клиентском коде. Для production рекомендуется endpoint на вашей стороне.
 
