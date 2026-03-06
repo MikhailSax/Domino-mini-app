@@ -16,7 +16,11 @@
 
 ```env
 VITE_API_BASE_URL=http://localhost:8000/api
+VITE_TELEGRAM_BOT_TOKEN=123456:telegram_bot_token
+VITE_TELEGRAM_CHAT_ID=123456789
 ```
+
+> Если `VITE_TELEGRAM_BOT_TOKEN` и `VITE_TELEGRAM_CHAT_ID` заданы, заказ отправляется напрямую через Bot API (`sendMessage`). Иначе используется fallback-ссылка `VITE_TELEGRAM_ORDER_LINK` для ручной отправки.
 
 ## Ожидаемые REST endpoint'ы (Symfony 7.3)
 

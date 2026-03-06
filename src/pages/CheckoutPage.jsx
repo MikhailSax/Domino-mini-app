@@ -1,9 +1,21 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { useCart } from "../app/CartContext.jsx";
 import { useProfile } from "../app/ProfileContext.jsx";
 import { formatRUB } from "../app/ui.js";
 
 const TELEGRAM_ORDER_LINK = import.meta.env.VITE_TELEGRAM_ORDER_LINK || "https://t.me/share/url?url=https://domline.ru&text=";
+const TELEGRAM_BOT_TOKEN = import.meta.env.VITE_TELEGRAM_BOT_TOKEN;
+const TELEGRAM_CHAT_ID = import.meta.env.VITE_TELEGRAM_CHAT_ID;
+
+function normalizePhone(phone) {
+  return String(phone || "").replace(/\D/g, "");
+}
+
+function isValidPhone(phone) {
+  const digits = normalizePhone(phone);
+
+  return digits.length >= 10 && digits.length <= 15;
+}
 
 function buildTelegramText({ profile, items, total }) {
   const lines = [
@@ -11,7 +23,7 @@ function buildTelegramText({ profile, items, total }) {
     "",
     `Имя: ${profile.name || "—"} ${profile.lastName || ""}`.trim(),
     `Телефон: ${profile.phone || "—"}`,
-    `Доставка: ${profile.address || "—"}`,
+    `Комментарий: ${profile.comment || "—"}`,
     "",
     "Позиции:",
     ...items.map((it, index) => `${index + 1}. ${it.title} • Тираж: ${it.qty} • ${formatRUB(it.price)}`),
@@ -25,12 +37,51 @@ function buildTelegramText({ profile, items, total }) {
 export default function CheckoutPage({ onBack, onDone }) {
   const { items, clear } = useCart();
   const { profile, setField } = useProfile();
+  const [submitError, setSubmitError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const total = useMemo(() => items.reduce((s, it) => s + Number(it.price || 0), 0), [items]);
-  const disabled = items.length === 0;
+  const disabled = items.length === 0 || isSubmitting;
 
-  const submitOrder = () => {
+  const submitOrder = async () => {
+    setSubmitError("");
+
+    if (!isValidPhone(profile.phone)) {
+      setSubmitError("Введите корректный телефон (минимум 10 цифр).");
+      return;
+    }
+
     const telegramText = buildTelegramText({ profile, items, total });
+
+    if (TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID) {
+      setIsSubmitting(true);
+      try {
+        const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            chat_id: TELEGRAM_CHAT_ID,
+            text: telegramText,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`Telegram API error: ${response.status}`);
+        }
+
+        clear();
+        onDone?.();
+      } catch {
+        setSubmitError("Не удалось отправить заказ в Telegram-бота. Попробуйте снова.");
+      } finally {
+        setIsSubmitting(false);
+      }
+
+      return;
+    }
+
     const baseLink = TELEGRAM_ORDER_LINK.includes("text=")
       ? TELEGRAM_ORDER_LINK
       : `${TELEGRAM_ORDER_LINK}${TELEGRAM_ORDER_LINK.includes("?") ? "&" : "?"}text=`;
@@ -62,7 +113,12 @@ export default function CheckoutPage({ onBack, onDone }) {
           <input className="w-full rounded-2xl border border-slate-200 px-3 py-3 text-sm bg-white text-black" placeholder="Имя" value={profile.name || ""} onChange={(e) => setField("name", e.target.value)} />
           <input className="w-full rounded-2xl border border-slate-200 px-3 py-3 text-sm bg-white text-black" placeholder="Фамилия" value={profile.lastName || ""} onChange={(e) => setField("lastName", e.target.value)} />
           <input className="w-full rounded-2xl border border-slate-200 px-3 py-3 text-sm bg-white text-black" placeholder="Телефон" value={profile.phone || ""} onChange={(e) => setField("phone", e.target.value)} />
-          <input className="w-full rounded-2xl border border-slate-200 px-3 py-3 text-sm bg-white text-black" placeholder="Адрес / доставка / самовывоз" value={profile.address || ""} onChange={(e) => setField("address", e.target.value)} />
+          <textarea
+            className="w-full rounded-2xl border border-slate-200 px-3 py-3 text-sm bg-white text-black min-h-24"
+            placeholder="Комментарий к заказу"
+            value={profile.comment || ""}
+            onChange={(e) => setField("comment", e.target.value)}
+          />
         </div>
       </div>
 
@@ -72,12 +128,14 @@ export default function CheckoutPage({ onBack, onDone }) {
           <div className="text-base font-semibold text-black">{formatRUB(total)}</div>
         </div>
 
+        {submitError ? <div className="mt-3 text-xs text-red-600">{submitError}</div> : null}
+
         <button
           className={"mt-3 w-full rounded-2xl py-3 text-sm font-medium " + (disabled ? "bg-slate-200 text-slate-500" : "bg-black text-white shadow-lg")}
           disabled={disabled}
           onClick={submitOrder}
         >
-          Отправить заказ в Telegram
+          {isSubmitting ? "Отправка..." : "Отправить заказ в Telegram"}
         </button>
       </div>
     </div>
