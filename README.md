@@ -16,6 +16,7 @@
 
 ```env
 VITE_API_BASE_URL=http://localhost:8000/api
+
 # Необязательно, по умолчанию будет <VITE_API_BASE_URL>/orders/telegram
 VITE_TELEGRAM_ORDER_ENDPOINT=http://localhost:8000/api/orders/telegram
 VITE_TELEGRAM_BOT_TOKEN=123456:telegram_bot_token
@@ -28,6 +29,7 @@ VITE_TELEGRAM_CHAT_ID=123456789
 > 3. Иначе используется `VITE_TELEGRAM_ORDER_LINK` для ручной отправки.
 
 > ⚠️ Прямая отправка из frontend раскрывает токен бота в клиентском коде. Для production рекомендуется endpoint на вашей стороне.
+
 
 ### Пример backend endpoint для отправки в Telegram
 
@@ -49,6 +51,7 @@ VITE_TELEGRAM_CHAT_ID=123456789
     }
   ],
   "total": 2500,
+
   "source": "telegram-mini-app",
   "telegramUser": {
     "id": 5145915027,
@@ -90,6 +93,10 @@ def send_order(payload: dict):
         raise HTTPException(status_code=502, detail=f"Telegram API error: {resp.text}")
 
     return {"ok": True}
+```
+=======
+  "text": "Новый заказ из мини-приложения..."
+}
 ```
 
 ## Ожидаемые REST endpoint'ы (Symfony 7.3)
