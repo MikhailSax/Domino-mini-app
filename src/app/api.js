@@ -15,6 +15,37 @@ export const TOP_CATEGORIES = [
 // Можно менять priceFrom, pricing и images под актуальный прайс/контент.
 // pricing.tiers — стоимость за 1 шт в диапазоне тиража.
 // По умолчанию поддерживаются диапазоны: 1–50, 51–100, 101–200, 201–500.
+const PRICE_FROM_BY_SLUG = {
+  "adresnye-tablichki": 677,
+  "bannernaya-setka": 176,
+  "bannernye-vyveski": 1830,
+  "beydzhi": 463,
+  "beydzhi-uf-pechat": 565,
+  "buklety-pechat": 2037,
+  "kalendar--domik": 84,
+  "kalendar-nastol-nyy-perekidnoy": 315,
+  "kartina-inter-er-pechat-na-holste": 2206,
+  "kvartal-nyy-kalendar-luks": 511,
+  "listovki-pechat": 1995,
+  "ottisk-d-40": 472,
+  "paket-bumazhnyy": 43575,
+  "paket-kraft": 6825,
+  "paket-pvd": 6300,
+  "pechat-bannera": 214,
+  "pechat-bannera-na-schit-statika-6h3": 4347,
+  "pechat-postera": 534,
+  "pechat-press-voll": 11164,
+  "pechat-reklamnogo-materiala-na-superbordy": 18070,
+  "pechati": 1260,
+  "plenka-dlya-supersaytov": 8259,
+  "reklamnyy-pauk": 8093,
+  "rezhimy-raboty": 821,
+  "roll-ap": 16370,
+  "stampi": 987,
+  "vizitki-pechat": 262,
+  "zakazat-press-voll-iz-bruska": 22296,
+};
+
 const PRODUCT_SETTINGS = [
   {
     slug: "vizitki-pechat",
@@ -151,7 +182,7 @@ const SETTINGS_BY_SLUG = PRODUCT_SETTINGS.reduce((acc, item) => {
 function getPricingProfile(product) {
   const customSettings = SETTINGS_BY_SLUG[product.slug] || {};
   const custom = customSettings.pricing;
-  const baseUnitPrice = Number(customSettings.priceFrom ?? custom?.tiers?.[0]?.unitPrice ?? slugToBasePrice(product.slug));
+  const baseUnitPrice = Number(customSettings.priceFrom ?? PRICE_FROM_BY_SLUG[product.slug] ?? custom?.tiers?.[0]?.unitPrice ?? slugToBasePrice(product.slug));
   const tiers = custom?.tiers || createDefaultTiers(baseUnitPrice);
   return {
     tiers: Array.isArray(tiers) && tiers.length
@@ -209,7 +240,7 @@ const PRODUCTS_BY_CATEGORY = RAW_PRODUCTS.reduce((acc, item, index) => {
     id: index + 1,
     title: item.title,
     slug: item.slug,
-    priceFrom: minBatchPrice,
+    priceFrom: customSettings.priceFrom ?? PRICE_FROM_BY_SLUG[item.slug] ?? minBatchPrice,
     minQty,
     minBatchPrice,
     pricingProfile,
