@@ -17,6 +17,10 @@
 ```env
 VITE_API_BASE_URL=http://localhost:8000/api
 
+# URL JSON-фида товаров (например, прокси к wow2print API)
+# Если не задан, используется встроенный mock-каталог domline.
+VITE_PRODUCTS_FEED_URL=
+
 # Необязательно, по умолчанию будет <VITE_API_BASE_URL>/orders/telegram
 VITE_TELEGRAM_ORDER_ENDPOINT=http://localhost:8000/api/orders/telegram
 VITE_TELEGRAM_BOT_TOKEN=123456:telegram_bot_token
@@ -98,6 +102,40 @@ def send_order(payload: dict):
   "text": "Новый заказ из мини-приложения..."
 }
 ```
+
+
+## Внешний фид товаров
+
+В `src/app/api.js` добавлена поддержка загрузки каталога из внешнего JSON (`VITE_PRODUCTS_FEED_URL`).
+
+Ожидаемый формат (минимум):
+
+```json
+{
+  "categories": [
+    { "id": "poligrafiya", "title": "Полиграфия" }
+  ],
+  "products": [
+    {
+      "slug": "vizitki-pechat",
+      "title": "Визитки",
+      "category": "poligrafiya",
+      "priceFrom": 262,
+      "description": "Печать визиток",
+      "images": ["https://.../1.jpg"],
+      "pricing": {
+        "tiers": [
+          { "from": 1, "to": 50, "unitPrice": 30 }
+        ]
+      }
+    }
+  ]
+}
+```
+
+Также поддерживаются синонимы полей: `items` вместо `products`, `name` вместо `title`, `price_from|minPrice|price`, `tiers` на корне товара и пр.
+
+> В этой среде прямой доступ к `https://api.wow2print.com/...` заблокирован (HTTP 403 через CONNECT). Поэтому для интеграции с wow2print рекомендуется сделать backend/proxy endpoint и указать его в `VITE_PRODUCTS_FEED_URL`.
 
 ## Ожидаемые REST endpoint'ы (Symfony 7.3)
 

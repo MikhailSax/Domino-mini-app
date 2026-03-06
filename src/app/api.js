@@ -1,4 +1,5 @@
-const USE_MOCK = true;
+const REMOTE_PRODUCTS_URL = String(import.meta.env.VITE_PRODUCTS_FEED_URL || "").trim();
+const USE_MOCK = !REMOTE_PRODUCTS_URL;
 
 // Категории и продукция синхронизированы с разделом https://domline.ru/produkciya
 // (снимок структуры и названий на 2026-03-06).
@@ -90,6 +91,142 @@ const PRODUCT_SETTINGS = [
   },
 ];
 
+
+const REMOTE_CATEGORY_MAP = {
+  poligrafiya: "poligrafiya",
+  "banner-print": "banner-print",
+  stamps: "stamps",
+  outdoor: "outdoor",
+  business: "business",
+};
+
+function normalizeRemoteTier(tier, nextTier) {
+  const from = Math.max(1, Number(tier?.from ?? tier?.minQty ?? 1));
+  const nextFrom = Number(nextTier?.from ?? nextTier?.minQty);
+  const toCandidate = Number(tier?.to ?? tier?.maxQty ?? (Number.isFinite(nextFrom) ? nextFrom - 1 : Number.MAX_SAFE_INTEGER));
+  const unitPrice = Math.max(0, Number(tier?.unitPrice ?? tier?.price ?? tier?.value ?? 0));
+
+  return {
+    from,
+    to: Number.isFinite(toCandidate) && toCandidate >= from ? toCandidate : Number.MAX_SAFE_INTEGER,
+    unitPrice,
+  };
+}
+
+function normalizeRemoteProduct(item, index, fallbackCategory = "poligrafiya") {
+  const slug = String(item?.slug || item?.id || `remote-product-${index + 1}`);
+  const title = String(item?.title || item?.name || `Товар ${index + 1}`);
+  const description = String(item?.description || item?.shortDescription || "Краткое описание товара.");
+
+  const categoryRaw = String(item?.category || item?.topCategory || fallbackCategory);
+  const category = REMOTE_CATEGORY_MAP[categoryRaw] || fallbackCategory;
+
+  const priceFrom = Number(
+    item?.priceFrom
+    ?? item?.price_from
+    ?? item?.minPrice
+    ?? item?.price
+    ?? CATEGORY_PRICING[category]?.priceFrom
+    ?? CATEGORY_PRICING.poligrafiya.priceFrom
+  );
+
+  const imageCandidates = Array.isArray(item?.images)
+    ? item.images
+    : Array.isArray(item?.gallery)
+      ? item.gallery
+      : item?.image
+        ? [item.image]
+        : [];
+
+  const images = imageCandidates.filter(Boolean).length
+    ? imageCandidates.filter(Boolean).map(String)
+    : DEFAULT_SLIDES;
+
+  const rawTiers = Array.isArray(item?.pricing?.tiers)
+    ? item.pricing.tiers
+    : Array.isArray(item?.tiers)
+      ? item.tiers
+      : [];
+
+  const tiers = rawTiers
+    .map((tier, tierIndex) => normalizeRemoteTier(tier, rawTiers[tierIndex + 1]))
+    .filter((tier) => tier.unitPrice > 0);
+
+  const pricingProfile = tiers.length
+    ? { tiers }
+    : getPricingProfile({ category, slug });
+
+  return {
+    id: index + 1,
+    title,
+    slug,
+    category,
+    priceFrom: Number.isFinite(priceFrom) ? priceFrom : CATEGORY_PRICING[category]?.priceFrom || 0,
+    pricingProfile,
+    images,
+    description,
+    sourceUrl: String(item?.sourceUrl || item?.url || ""),
+  };
+}
+
+function parseRemotePayload(payload) {
+  const categoriesRaw = Array.isArray(payload?.categories) ? payload.categories : null;
+
+  const categories = categoriesRaw?.length
+    ? categoriesRaw
+        .map((category, index) => ({
+          id: String(category?.id || category?.slug || TOP_CATEGORIES[index]?.id || `category-${index + 1}`),
+          title: String(category?.title || category?.name || TOP_CATEGORIES[index]?.title || `Категория ${index + 1}`),
+        }))
+        .filter((category) => category.id && category.title)
+    : TOP_CATEGORIES;
+
+  const productsRaw = Array.isArray(payload?.products)
+    ? payload.products
+    : Array.isArray(payload?.items)
+      ? payload.items
+      : [];
+
+  const productsByCategory = productsRaw.reduce((acc, item, index) => {
+    const product = normalizeRemoteProduct(item, index);
+    if (!acc[product.category]) acc[product.category] = [];
+    acc[product.category].push(product);
+    return acc;
+  }, {});
+
+  categories.forEach((category) => {
+    if (!productsByCategory[category.id]) productsByCategory[category.id] = [];
+  });
+
+  return { categories, productsByCategory };
+}
+
+let remoteCache = null;
+let remoteCacheAt = 0;
+const REMOTE_CACHE_TTL_MS = 60_000;
+
+async function loadRemoteProductsData() {
+  const now = Date.now();
+  if (remoteCache && now - remoteCacheAt < REMOTE_CACHE_TTL_MS) {
+    return remoteCache;
+  }
+
+  const response = await fetch(REMOTE_PRODUCTS_URL, {
+    headers: {
+      Accept: "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Remote products fetch failed: ${response.status}`);
+  }
+
+  const payload = await response.json();
+  const normalized = parseRemotePayload(payload);
+  remoteCache = normalized;
+  remoteCacheAt = now;
+  return normalized;
+}
 const CATEGORY_PRICING = {
   poligrafiya: {
     priceFrom: 1400,
@@ -253,36 +390,49 @@ function sleep(ms) {
 
 export const api = {
   async getTopCategories() {
+    await sleep(80);
+
     if (USE_MOCK) {
-      await sleep(80);
       return TOP_CATEGORIES;
     }
+
+    const { categories } = await loadRemoteProductsData();
+    return categories;
   },
 
   async getProductsByTopCategory(topCategoryId) {
+    await sleep(80);
+
     if (USE_MOCK) {
-      await sleep(80);
       return PRODUCTS_BY_CATEGORY[topCategoryId] || [];
     }
+
+    const { productsByCategory } = await loadRemoteProductsData();
+    return productsByCategory[topCategoryId] || [];
   },
 
   async getProductBySlug(slug) {
-    if (USE_MOCK) {
-      await sleep(80);
-      const all = Object.values(PRODUCTS_BY_CATEGORY).flat();
-      const p = all.find((x) => x.slug === slug);
-      if (!p) throw new Error("Not found");
-      return {
-        ...p,
-        description: p.description || "Краткое описание товара.",
-      };
-    }
+    await sleep(80);
+
+    const all = USE_MOCK
+      ? Object.values(PRODUCTS_BY_CATEGORY).flat()
+      : Object.values((await loadRemoteProductsData()).productsByCategory).flat();
+
+    const p = all.find((x) => x.slug === slug);
+    if (!p) throw new Error("Not found");
+
+    return {
+      ...p,
+      description: p.description || "Краткое описание товара.",
+    };
   },
 
   async estimatePrice({ slug, qty, material, term, priceFrom, pricingProfile }) {
     await sleep(50);
 
-    const all = Object.values(PRODUCTS_BY_CATEGORY).flat();
+    const all = USE_MOCK
+      ? Object.values(PRODUCTS_BY_CATEGORY).flat()
+      : Object.values((await loadRemoteProductsData()).productsByCategory).flat();
     const p = all.find((x) => x.slug === slug);
     const profile = pricingProfile || p?.pricingProfile || {
       tiers: [
