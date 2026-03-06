@@ -19,7 +19,7 @@ export default function OrdersPage() {
       <div className="mt-3 rounded-3xl bg-black text-white p-5 shadow-sm border border-black">
         <div className="text-sm opacity-80">Мои заказы</div>
         <div className="text-2xl font-semibold mt-1 leading-tight">История</div>
-        <div className="text-xs opacity-70 mt-2">Хранится локально (localStorage). Потом заменим на REST.</div>
+        <div className="text-xs opacity-70 mt-2">Хранится локально (localStorage).</div>
       </div>
 
       {orders.length > 0 && (

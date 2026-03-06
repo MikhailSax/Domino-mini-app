@@ -88,7 +88,7 @@ export const api = {
       if (!p) throw new Error("Not found");
       return {
         ...p,
-        description: p.description || "Описание добавим позже. Здесь будет конфигуратор и загрузка макета.",
+        description: p.description || "Краткое описание товара.",
       };
     }
   },
