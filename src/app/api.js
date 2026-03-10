@@ -31,36 +31,64 @@ const DEFAULT_TERMS = {
   "Срочно": 1.3,
 };
 
+
+function makeProduct(config) {
+  return {
+    sizes: [],
+    images: DEFAULT_SLIDES,
+    characteristics: DEFAULT_CHARACTERISTICS,
+    ...config,
+  };
+}
+
+function buildRunPriceTiers(runPrices = []) {
+  if (Array.isArray(runPrices)) {
+    return runPrices.map((item) => ({
+      from: Number(item.from ?? item.qty ?? 1),
+      to: item.to,
+      unitPrice: Number(item.unitPrice ?? item.price ?? 0),
+    }));
+  }
+
+  if (runPrices && typeof runPrices === "object") {
+    return Object.entries(runPrices)
+      .map(([qty, price]) => ({ from: Number(qty), unitPrice: Number(price) }))
+      .sort((a, b) => a.from - b.from);
+  }
+
+  return [];
+}
+
 // Главный массив товаров
 export const PRODUCTS = [
-  { title: "Визитки", slug: "vizitki-pechat", category: "poligrafiya", description: "Печать визиток — быстро и качественно для вашего бизнеса.", priceFrom: 262, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS, calculation: { tiers: [{ from: 1, to: 50, unitPrice: 30 }, { from: 51, to: 100, unitPrice: 20 }, { from: 101, to: 200, unitPrice: 15 }, { from: 201, to: 500, unitPrice: 12 }], materials: DEFAULT_MATERIALS, terms: DEFAULT_TERMS } },
-  { title: "Листовки", slug: "listovki-pechat", category: "poligrafiya", description: "Печать рекламных листовок для акций, событий и промо-кампаний.", priceFrom: 1995, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS, calculation: { tiers: [{ from: 1, to: 50, unitPrice: 45 }, { from: 51, to: 100, unitPrice: 30 }, { from: 101, to: 200, unitPrice: 22 }, { from: 201, to: 500, unitPrice: 18 }], materials: DEFAULT_MATERIALS, terms: DEFAULT_TERMS } },
-  { title: "Буклеты", slug: "buklety-pechat", category: "poligrafiya", description: "Печать буклетов для презентации услуг и товаров.", priceFrom: 2037, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS },
-  { title: "Квартальный календарь — Люкс", slug: "kvartal-nyy-kalendar-luks", category: "poligrafiya", description: "Премиальный квартальный календарь для офиса и корпоративных подарков.", priceFrom: 511, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS },
-  { title: "Календарь — домик", slug: "kalendar--domik", category: "poligrafiya", description: "Настольный календарь-домик с брендированием.", priceFrom: 84, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS },
-  { title: "Календарь настольный перекидной", slug: "kalendar-nastol-nyy-perekidnoy", category: "poligrafiya", description: "Перекидной настольный календарь с индивидуальным дизайном.", priceFrom: 315, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS },
-  { title: "Пакет бумажный", slug: "paket-bumazhnyy", category: "poligrafiya", description: "Бумажные пакеты с фирменной печатью.", priceFrom: 43575, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS },
-  { title: "Пакет крафт", slug: "paket-kraft", category: "poligrafiya", description: "Крафтовые пакеты для экологичной упаковки и брендинга.", priceFrom: 6825, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS },
-  { title: "Печать баннера", slug: "pechat-bannera", category: "banner-print", description: "Печать баннеров для наружной рекламы и мероприятий.", priceFrom: 3200, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS, calculation: { tiers: [{ from: 1, to: 50, unitPrice: 3200 }, { from: 51, to: 100, unitPrice: 3000 }, { from: 101, to: 200, unitPrice: 2800 }, { from: 201, to: 500, unitPrice: 2500 }], materials: DEFAULT_MATERIALS, terms: DEFAULT_TERMS } },
-  { title: "Пресс волл из хромированных труб", slug: "pechat-press-voll", category: "banner-print", description: "Изготовление пресс-воллов с баннерной печатью.", priceFrom: 11164, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS },
-  { title: "Пресс волл из бруска", slug: "zakazat-press-voll-iz-bruska", category: "banner-print", description: "Пресс-волл на каркасе из бруска для фотозон и презентаций.", priceFrom: 22296, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS },
-  { title: "Баннерная сетка", slug: "bannernaya-setka", category: "banner-print", description: "Печать на баннерной сетке для больших фасадных размещений.", priceFrom: 176, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS },
-  { title: "Печать рекламного материала на щит 6×3", slug: "pechat-bannera-na-schit-statika-6h3", category: "banner-print", description: "Баннеры для щитов 6×3 с подготовкой под монтаж.", priceFrom: 4347, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS },
-  { title: "Печать баннеров на суперборды", slug: "pechat-reklamnogo-materiala-na-superbordy", category: "banner-print", description: "Крупноформатная печать баннеров для супербордов.", priceFrom: 18070, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS },
-  { title: "Плёнка для суперсайтов", slug: "plenka-dlya-supersaytov", category: "banner-print", description: "Печать на плёнке для световых конструкций и суперсайтов.", priceFrom: 8259, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS },
-  { title: "Печати", slug: "pechati", category: "stamps", description: "Изготовление печатей для ИП и организаций.", priceFrom: 1300, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS, calculation: { tiers: [{ from: 1, to: 50, unitPrice: 1300 }, { from: 51, to: 100, unitPrice: 1150 }, { from: 101, to: 200, unitPrice: 1000 }, { from: 201, to: 500, unitPrice: 900 }], materials: DEFAULT_MATERIALS, terms: DEFAULT_TERMS } },
-  { title: "Оттиск D 40", slug: "ottisk-d-40", category: "stamps", description: "Сменный оттиск D40 для печати диаметром 40 мм.", priceFrom: 472, sizes: [{ label: "D40", widthMm: 40, heightMm: 40 }], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS },
-  { title: "Штампы", slug: "stampi", category: "stamps", description: "Изготовление штампов под задачи документооборота.", priceFrom: 987, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS },
-  { title: "Печать на холсте", slug: "kartina-inter-er-pechat-na-holste", category: "outdoor", description: "Интерьерная печать на холсте.", priceFrom: 2206, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS },
-  { title: "Рекламный паук", slug: "reklamnyy-pauk", category: "outdoor", description: "Мобильная рекламная конструкция «паук» с печатью.", priceFrom: 8093, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS },
-  { title: "Ролл-ап", slug: "roll-ap", category: "outdoor", description: "Ролл-ап стенды для выставок, презентаций и промо-точек.", priceFrom: 16370, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS },
-  { title: "Печать постера", slug: "pechat-postera", category: "outdoor", description: "Печать постеров разных форматов.", priceFrom: 534, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS },
-  { title: "Баннерные вывески", slug: "bannernye-vyveski", category: "outdoor", description: "Изготовление баннерных вывесок для бизнеса.", priceFrom: 1830, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS },
-  { title: "Бейджи с гравировкой", slug: "beydzhi", category: "business", description: "Именные и корпоративные бейджи с гравировкой.", priceFrom: 463, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS },
-  { title: "Бейджи с УФ печатью", slug: "beydzhi-uf-pechat", category: "business", description: "Бейджи с полноцветной УФ-печатью.", priceFrom: 565, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS },
-  { title: "Режимы работы", slug: "rezhimy-raboty", category: "business", description: "Таблички с режимом работы и фирменным стилем.", priceFrom: 821, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS },
-  { title: "Адресные таблички", slug: "adresnye-tablichki", category: "business", description: "Адресные таблички для дома и офиса.", priceFrom: 677, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS },
-  { title: "Пакет ПВД", slug: "paket-pvd", category: "business", description: "ПВД пакеты с нанесением логотипа.", priceFrom: 6300, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS },
+  makeProduct({ title: "Визитки", slug: "vizitki-pechat", category: "poligrafiya", description: "Печать визиток — быстро и качественно для вашего бизнеса.", priceFrom: 262, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS, pricing: { runPrices: { 1: 30, 51: 20, 101: 15, 201: 12 }, materials: DEFAULT_MATERIALS, terms: DEFAULT_TERMS } }),
+  makeProduct({ title: "Листовки", slug: "listovki-pechat", category: "poligrafiya", description: "Печать рекламных листовок для акций, событий и промо-кампаний.", priceFrom: 1995, pricing: { runPrices: { 1: 45, 51: 30, 101: 22, 201: 18 }, materials: DEFAULT_MATERIALS, terms: DEFAULT_TERMS } }),
+  makeProduct({ title: "Буклеты", slug: "buklety-pechat", category: "poligrafiya", description: "Печать буклетов для презентации услуг и товаров.", priceFrom: 2037, sizes: [], images: DEFAULT_SLIDES, }),
+  makeProduct({ title: "Квартальный календарь — Люкс", slug: "kvartal-nyy-kalendar-luks", category: "poligrafiya", description: "Премиальный квартальный календарь для офиса и корпоративных подарков.", priceFrom: 511, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS }),
+  makeProduct({ title: "Календарь — домик", slug: "kalendar--domik", category: "poligrafiya", description: "Настольный календарь-домик с брендированием.", priceFrom: 84, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS }),
+  makeProduct({ title: "Календарь настольный перекидной", slug: "kalendar-nastol-nyy-perekidnoy", category: "poligrafiya", description: "Перекидной настольный календарь с индивидуальным дизайном.", priceFrom: 315, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS }),
+  makeProduct({ title: "Пакет бумажный", slug: "paket-bumazhnyy", category: "poligrafiya", description: "Бумажные пакеты с фирменной печатью.", priceFrom: 43575, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS }),
+  makeProduct({ title: "Пакет крафт", slug: "paket-kraft", category: "poligrafiya", description: "Крафтовые пакеты для экологичной упаковки и брендинга.", priceFrom: 6825, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS }),
+  makeProduct({ title: "Печать баннера", slug: "pechat-bannera", category: "banner-print", description: "Печать баннеров для наружной рекламы и мероприятий.", priceFrom: 3200, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS, pricing: { runPrices: { 1: 3200, 51: 3000, 101: 2800, 201: 2500 }, materials: DEFAULT_MATERIALS, terms: DEFAULT_TERMS } }),
+  makeProduct({ title: "Пресс волл из хромированных труб", slug: "pechat-press-voll", category: "banner-print", description: "Изготовление пресс-воллов с баннерной печатью.", priceFrom: 11164, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS }),
+  makeProduct({ title: "Пресс волл из бруска", slug: "zakazat-press-voll-iz-bruska", category: "banner-print", description: "Пресс-волл на каркасе из бруска для фотозон и презентаций.", priceFrom: 22296, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS }),
+  makeProduct({ title: "Баннерная сетка", slug: "bannernaya-setka", category: "banner-print", description: "Печать на баннерной сетке для больших фасадных размещений.", priceFrom: 176, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS }),
+  makeProduct({ title: "Печать рекламного материала на щит 6×3", slug: "pechat-bannera-na-schit-statika-6h3", category: "banner-print", description: "Баннеры для щитов 6×3 с подготовкой под монтаж.", priceFrom: 4347, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS }),
+  makeProduct({ title: "Печать баннеров на суперборды", slug: "pechat-reklamnogo-materiala-na-superbordy", category: "banner-print", description: "Крупноформатная печать баннеров для супербордов.", priceFrom: 18070, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS }),
+  makeProduct({ title: "Плёнка для суперсайтов", slug: "plenka-dlya-supersaytov", category: "banner-print", description: "Печать на плёнке для световых конструкций и суперсайтов.", priceFrom: 8259, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS }),
+  makeProduct({ title: "Печати", slug: "pechati", category: "stamps", description: "Изготовление печатей для ИП и организаций.", priceFrom: 1300, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS, pricing: { runPrices: { 1: 1300, 51: 1150, 101: 1000, 201: 900 }, materials: DEFAULT_MATERIALS, terms: DEFAULT_TERMS } }),
+  makeProduct({ title: "Оттиск D 40", slug: "ottisk-d-40", category: "stamps", description: "Сменный оттиск D40 для печати диаметром 40 мм.", priceFrom: 472, sizes: [{ label: "D40", widthMm: 40, heightMm: 40 }], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS }),
+  makeProduct({ title: "Штампы", slug: "stampi", category: "stamps", description: "Изготовление штампов под задачи документооборота.", priceFrom: 987, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS }),
+  makeProduct({ title: "Печать на холсте", slug: "kartina-inter-er-pechat-na-holste", category: "outdoor", description: "Интерьерная печать на холсте.", priceFrom: 2206, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS }),
+  makeProduct({ title: "Рекламный паук", slug: "reklamnyy-pauk", category: "outdoor", description: "Мобильная рекламная конструкция «паук» с печатью.", priceFrom: 8093, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS }),
+  makeProduct({ title: "Ролл-ап", slug: "roll-ap", category: "outdoor", description: "Ролл-ап стенды для выставок, презентаций и промо-точек.", priceFrom: 16370, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS }),
+  makeProduct({ title: "Печать постера", slug: "pechat-postera", category: "outdoor", description: "Печать постеров разных форматов.", priceFrom: 534, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS }),
+  makeProduct({ title: "Баннерные вывески", slug: "bannernye-vyveski", category: "outdoor", description: "Изготовление баннерных вывесок для бизнеса.", priceFrom: 1830, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS }),
+  makeProduct({ title: "Бейджи с гравировкой", slug: "beydzhi", category: "business", description: "Именные и корпоративные бейджи с гравировкой.", priceFrom: 463, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS }),
+  makeProduct({ title: "Бейджи с УФ печатью", slug: "beydzhi-uf-pechat", category: "business", description: "Бейджи с полноцветной УФ-печатью.", priceFrom: 565, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS }),
+  makeProduct({ title: "Режимы работы", slug: "rezhimy-raboty", category: "business", description: "Таблички с режимом работы и фирменным стилем.", priceFrom: 821, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS }),
+  makeProduct({ title: "Адресные таблички", slug: "adresnye-tablichki", category: "business", description: "Адресные таблички для дома и офиса.", priceFrom: 677, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS }),
+  makeProduct({ title: "Пакет ПВД", slug: "paket-pvd", category: "business", description: "ПВД пакеты с нанесением логотипа.", priceFrom: 6300, sizes: [], images: DEFAULT_SLIDES, characteristics: DEFAULT_CHARACTERISTICS }),
 ];
 
 function normalizeTiers(tiers = [], basePrice = 1000) {
@@ -85,9 +113,9 @@ function normalizeTiers(tiers = [], basePrice = 1000) {
 function toPublicProduct(item, index) {
   const safePriceFrom = Math.max(0, Number(item.priceFrom ?? 0));
   const pricingProfile = {
-    tiers: normalizeTiers(item.calculation?.tiers, safePriceFrom || 1000),
-    materials: item.calculation?.materials || DEFAULT_MATERIALS,
-    terms: item.calculation?.terms || DEFAULT_TERMS,
+    tiers: normalizeTiers((item.pricing?.runPrices ? buildRunPriceTiers(item.pricing.runPrices) : item.calculation?.tiers), safePriceFrom || 1000),
+    materials: item.pricing?.materials || item.calculation?.materials || DEFAULT_MATERIALS,
+    terms: item.pricing?.terms || item.calculation?.terms || DEFAULT_TERMS,
   };
 
   const firstTier = pricingProfile.tiers[0];
